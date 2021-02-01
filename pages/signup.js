@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Head from "next/head"
 import Link from "next/link"
+import valid from "../utils/valid"
 
 const Signup = () => {
     const [name, setName] = useState("")
@@ -10,7 +11,10 @@ const Signup = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        console.log("clicked")
+        const errorMessage = valid(name, email, password, cfPassword)
+        if (errorMessage) {
+            console.log(errorMessage)
+        }
     }
 
     return (
