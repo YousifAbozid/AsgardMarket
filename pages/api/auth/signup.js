@@ -17,9 +17,16 @@ const signup = async (request, response) => {
     try {
         const { name, email, password, cfPassword } = request.body
         const errorMessage = valid(name, email, password, cfPassword)
-
-        if (errorMessage)
+        if (errorMessage) {
             return response.status(400).json({ error: errorMessage })
+        }
+
+        const user = await User.findOne({ email })
+        if (user) {
+            return response
+                .status(400)
+                .json({ error: "This email is already exist." })
+        }
 
         const passwordHash = await bcrypt.hash(password, 12)
 
@@ -29,6 +36,8 @@ const signup = async (request, response) => {
             password: passwordHash,
             cfPassword,
         })
+
+        await newUser.save()
 
         response.status(201).json({ message: "Signed up successfully!" })
     } catch (error) {

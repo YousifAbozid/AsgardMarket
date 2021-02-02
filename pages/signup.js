@@ -2,6 +2,7 @@ import { useState, useContext } from "react"
 import Head from "next/head"
 import Link from "next/link"
 import valid from "../utils/valid"
+import { postData } from "../utils/fetchData"
 import { DataContext } from "../store/GlobalState"
 import ACTIONS from "../store/Actions"
 
@@ -13,7 +14,7 @@ const Signup = () => {
 
     const [state, dispatch] = useContext(DataContext)
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         const errorMessage = valid(name, email, password, cfPassword)
 
@@ -24,9 +25,20 @@ const Signup = () => {
             })
         }
 
-        dispatch({
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
+        const userData = { name, email, password, cfPassword }
+        const response = await postData("auth/signup", userData)
+        if (response.error) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: response.error },
+            })
+        }
+
+        return dispatch({
             type: ACTIONS.NOTIFY,
-            payload: { success: "Done" },
+            payload: { success: response.message },
         })
     }
 
