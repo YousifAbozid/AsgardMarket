@@ -5,7 +5,7 @@ import Loading from "./Loading"
 import ACTIONS from "../store/Actions"
 
 const Notify = () => {
-    const [state, dispatch] = useContext(DataContext)
+    const { state, dispatch } = useContext(DataContext)
     const { notify } = state
 
     return (

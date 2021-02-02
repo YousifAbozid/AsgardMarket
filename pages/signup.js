@@ -12,7 +12,7 @@ const Signup = () => {
     const [password, setPassword] = useState("")
     const [cfPassword, setCfPassword] = useState("")
 
-    const [state, dispatch] = useContext(DataContext)
+    const { state, dispatch } = useContext(DataContext)
 
     const handleSubmit = async (event) => {
         event.preventDefault()
