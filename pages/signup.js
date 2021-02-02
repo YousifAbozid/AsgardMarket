@@ -1,7 +1,9 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import Head from "next/head"
 import Link from "next/link"
 import valid from "../utils/valid"
+import { DataContext } from "../store/GlobalState"
+import ACTIONS from "../store/Actions"
 
 const Signup = () => {
     const [name, setName] = useState("")
@@ -9,12 +11,23 @@ const Signup = () => {
     const [password, setPassword] = useState("")
     const [cfPassword, setCfPassword] = useState("")
 
+    const [state, dispatch] = useContext(DataContext)
+
     const handleSubmit = (event) => {
         event.preventDefault()
         const errorMessage = valid(name, email, password, cfPassword)
+
         if (errorMessage) {
-            console.log(errorMessage)
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: errorMessage },
+            })
         }
+
+        dispatch({
+            type: ACTIONS.NOTIFY,
+            payload: { success: "Done" },
+        })
     }
 
     return (
@@ -36,7 +49,10 @@ const Signup = () => {
                         className="form-control"
                         id="name"
                         value={name}
-                        onChange={({ target }) => setName(target.value)}
+                        onChange={({ target }) => {
+                            setName(target.value)
+                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                        }}
                     />
                 </div>
 
@@ -50,7 +66,10 @@ const Signup = () => {
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
                         value={email}
-                        onChange={({ target }) => setEmail(target.value)}
+                        onChange={({ target }) => {
+                            setEmail(target.value)
+                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                        }}
                     />
                     <div id="emailHelp" className="form-text">
                         We'll never share your email with anyone else.
@@ -68,7 +87,10 @@ const Signup = () => {
                         className="form-control"
                         id="exampleInputPassword1"
                         value={password}
-                        onChange={({ target }) => setPassword(target.value)}
+                        onChange={({ target }) => {
+                            setPassword(target.value)
+                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                        }}
                     />
                 </div>
                 <div className="mb-3">
@@ -83,7 +105,10 @@ const Signup = () => {
                         className="form-control"
                         id="exampleInputPassword2"
                         value={cfPassword}
-                        onChange={({ target }) => setCfPassword(target.value)}
+                        onChange={({ target }) => {
+                            setCfPassword(target.value)
+                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                        }}
                     />
                 </div>
 
