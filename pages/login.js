@@ -1,10 +1,34 @@
 import Head from "next/head"
 import Link from "next/link"
+import { useState, useContext } from "react"
+import valid from "../utils/valid"
+import { postData } from "../utils/fetchData"
+import { DataContext } from "../store/GlobalState"
+import ACTIONS from "../store/Actions"
 
 const Login = () => {
-    const handleSubmit = (event) => {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const { state, dispatch } = useContext(DataContext)
+
+    const handleSubmit = async (event) => {
         event.preventDefault()
-        console.log("clicked")
+
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
+        const userData = { email, password }
+        const response = await postData("auth/login", userData)
+        if (response.error) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: response.error },
+            })
+        }
+
+        return dispatch({
+            type: ACTIONS.NOTIFY,
+            payload: { success: response.message },
+        })
     }
 
     return (
@@ -26,6 +50,11 @@ const Login = () => {
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
+                        value={email}
+                        onChange={({ target }) => {
+                            setEmail(target.value)
+                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                        }}
                     />
                     <div id="emailHelp" className="form-text">
                         We'll never share your email with anyone else.
@@ -42,6 +71,11 @@ const Login = () => {
                         type="password"
                         className="form-control"
                         id="exampleInputPassword1"
+                        value={password}
+                        onChange={({ target }) => {
+                            setPassword(target.value)
+                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                        }}
                     />
                 </div>
 
