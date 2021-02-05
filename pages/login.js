@@ -1,10 +1,10 @@
 import Head from "next/head"
 import Link from "next/link"
 import { useState, useContext } from "react"
-import valid from "../utils/valid"
 import { postData } from "../utils/fetchData"
 import { DataContext } from "../store/GlobalState"
 import ACTIONS from "../store/Actions"
+import Cookie from "js-cookie"
 
 const Login = () => {
     const [email, setEmail] = useState("")
@@ -13,9 +13,7 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-
         dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
-
         const userData = { email, password }
         const response = await postData("auth/login", userData)
         if (response.error) {
@@ -24,11 +22,19 @@ const Login = () => {
                 payload: { error: response.error },
             })
         }
-
-        return dispatch({
+        dispatch({
             type: ACTIONS.NOTIFY,
             payload: { success: response.message },
         })
+        dispatch({
+            type: ACTIONS.AUTH,
+            payload: { token: response.accessToken, user: response.user },
+        })
+        Cookie.set("refreshtoken", response.refreshToken, {
+            path: "api/auth/accessToken",
+            expires: 7,
+        })
+        localStorage.setItem("firstLogin", true)
     }
 
     return (

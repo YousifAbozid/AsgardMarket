@@ -37,3 +37,7 @@ const schema = new mongoose.Schema(
 const User = mongoose.model("User", schema)
 
 export default User
+
+// export default (mongoose.models && mongoose.models.User
+//     ? mongoose.models.User
+//     : mongoose.model('User', userSchema));
