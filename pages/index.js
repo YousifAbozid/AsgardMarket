@@ -1,12 +1,13 @@
 import { getData } from "../utils/fetchData"
 import { useState } from "react"
 import Head from "next/head"
+import ProductItem from "../components/product/ProductItem"
 
 const Home = (props) => {
     const [products, setProducts] = useState(props.products)
 
     return (
-        <div>
+        <div className="products">
             <Head>
                 <title>Asgard Market</title>
             </Head>
