@@ -1,6 +1,7 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import valid from "../utils/valid"
 import { postData } from "../utils/fetchData"
 import { DataContext } from "../store/GlobalState"
@@ -11,8 +12,15 @@ const Signup = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [cfPassword, setCfPassword] = useState("")
-
+    const router = useRouter()
     const { state, dispatch } = useContext(DataContext)
+    const { auth } = state
+
+    useEffect(() => {
+        if (Object.keys(auth).length !== 0) {
+            router.push("/")
+        }
+    }, [auth])
 
     const handleSubmit = async (event) => {
         event.preventDefault()

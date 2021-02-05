@@ -1,9 +1,14 @@
-import React from "react"
+import React, { useContext } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { DataContext } from "../store/GlobalState"
+import Cookie from "js-cookie"
+import ACTIONS from "../store/Actions"
 
 const NavBar = () => {
     const router = useRouter()
+    const { state, dispatch } = useContext(DataContext)
+    const { auth } = state
 
     const isActive = (r) => {
         if (r === router.pathname) {
@@ -11,6 +16,57 @@ const NavBar = () => {
         } else {
             return ""
         }
+    }
+
+    const handleLogout = () => {
+        Cookie.remove("refreshtoken", { path: "api/auth/accessToken" })
+        localStorage.removeItem("firstLogin")
+        dispatch({ type: ACTIONS.AUTH, payload: {} })
+        dispatch({ type: ACTIONS.NOTIFY, payload: { success: "Logged out" } })
+    }
+
+    const loggedRouter = () => {
+        return (
+            <li className="nav-item dropdown">
+                <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <img
+                        src={auth.user.avatar}
+                        alt={auth.user.avatar}
+                        style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            transform: "translateY(-3px)",
+                            marginRight: "5px",
+                        }}
+                    />
+                    {auth.user.name}
+                </a>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                        <a className="dropdown-item" href="#">
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <button
+                            className="dropdown-item"
+                            href="#"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                    </li>
+                </ul>
+            </li>
+        )
     }
 
     return (
@@ -46,17 +102,25 @@ const NavBar = () => {
                                 </a>
                             </Link>
                         </li>
-                        <li className="nav-item">
-                            <Link href="/login">
-                                <a className={"nav-link " + isActive("/login")}>
-                                    <i
-                                        className="fas fa-user"
-                                        aria-hidden="true"
-                                    ></i>{" "}
-                                    Login
-                                </a>
-                            </Link>
-                        </li>
+                        {Object.keys(auth).length === 0 ? (
+                            <li className="nav-item">
+                                <Link href="/login">
+                                    <a
+                                        className={
+                                            "nav-link " + isActive("/login")
+                                        }
+                                    >
+                                        <i
+                                            className="fas fa-user"
+                                            aria-hidden="true"
+                                        ></i>{" "}
+                                        Login
+                                    </a>
+                                </Link>
+                            </li>
+                        ) : (
+                            loggedRouter()
+                        )}
                     </ul>
                 </div>
             </div>

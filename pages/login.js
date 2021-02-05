@@ -1,6 +1,7 @@
 import Head from "next/head"
 import Link from "next/link"
-import { useState, useContext } from "react"
+import { useRouter } from "next/router"
+import { useState, useContext, useEffect } from "react"
 import { postData } from "../utils/fetchData"
 import { DataContext } from "../store/GlobalState"
 import ACTIONS from "../store/Actions"
@@ -10,6 +11,14 @@ const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const { state, dispatch } = useContext(DataContext)
+    const { auth } = state
+    const router = useRouter()
+
+    useEffect(() => {
+        if (Object.keys(auth).length !== 0) {
+            router.push("/")
+        }
+    }, [auth])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
