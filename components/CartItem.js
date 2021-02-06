@@ -49,6 +49,9 @@ const CartItem = ({ item, dispatch, cart }) => {
                 <i
                     className="far fa-trash-alt text-danger"
                     aria-hidden="true"
+                    style={{ fontSize: "18px" }}
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
                 ></i>
             </td>
         </tr>
