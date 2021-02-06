@@ -2,6 +2,7 @@ export const ACTIONS = {
     NOTIFY: "NOTIFY",
     AUTH: "AUTH",
     ADD_CART: "ADD_CART",
+    ADD_MODAL: "ADD_MODAL",
 }
 
 export const addToCart = (product, cart) => {
@@ -48,4 +49,9 @@ export const decrease = (cart, id) => {
     })
 
     return { type: ACTIONS.ADD_CART, payload: updatedCart }
+}
+
+export const deleteItem = (cart, id, type) => {
+    const newCart = cart.filter((item) => item._id !== id)
+    return { type, payload: newCart }
 }

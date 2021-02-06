@@ -1,5 +1,15 @@
+import { useContext } from "react"
+import { DataContext } from "../store/GlobalState"
+import { ACTIONS, deleteItem } from "../store/Actions"
+
 const Modal = () => {
-    const handleDelete = () => {}
+    const { state, dispatch } = useContext(DataContext)
+    const { modal } = state
+
+    const handleDelete = () => {
+        dispatch(deleteItem(modal.data, modal.id, ACTIONS.ADD_CART))
+        dispatch({ type: ACTIONS.ADD_MODAL, payload: {} })
+    }
 
     return (
         <div
@@ -12,8 +22,11 @@ const Modal = () => {
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">
-                            Modal title
+                        <h5
+                            className="modal-title text-capitalize"
+                            id="exampleModalLabel"
+                        >
+                            {modal.title}
                         </h5>
                         <button
                             type="button"
@@ -22,7 +35,9 @@ const Modal = () => {
                             aria-label="Close"
                         ></button>
                     </div>
-                    <div className="modal-body">...</div>
+                    <div className="modal-body">
+                        Are you sure you want to delete this item?
+                    </div>
                     <div className="modal-footer">
                         <button
                             type="button"
