@@ -1,4 +1,4 @@
-import ACTIONS from "./Actions"
+import { ACTIONS } from "./Actions"
 
 const reducers = (state, action) => {
     switch (action.type) {
@@ -6,6 +6,8 @@ const reducers = (state, action) => {
             return { ...state, notify: action.payload }
         case ACTIONS.AUTH:
             return { ...state, auth: action.payload }
+        case ACTIONS.ADD_CART:
+            return { ...state, cart: action.payload }
         default:
             return state
     }
