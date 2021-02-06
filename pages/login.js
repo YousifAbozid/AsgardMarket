@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { useState, useContext, useEffect } from "react"
 import { postData } from "../utils/fetchData"
 import { DataContext } from "../store/GlobalState"
-import ACTIONS from "../store/Actions"
+import { ACTIONS } from "../store/Actions"
 import Cookie from "js-cookie"
 
 const Login = () => {

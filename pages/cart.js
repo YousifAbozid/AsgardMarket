@@ -1,11 +1,25 @@
 import Head from "next/head"
-import Image from "next/image"
-import { useContext } from "react"
+import Link from "next/link"
+import { useContext, useEffect, useState } from "react"
+import CartItem from "../components/CartItem"
 import { DataContext } from "../store/GlobalState"
 
 const Cart = () => {
     const { state, dispatch } = useContext(DataContext)
-    const { cart } = state
+    const { cart, auth } = state
+    const [total, setTotal] = useState(0)
+
+    useEffect(() => {
+        const getTotal = () => {
+            const result = cart.reduce((prev, item) => {
+                return prev + item.price * item.quantity
+            }, 0)
+
+            setTotal(result)
+        }
+
+        getTotal()
+    }, [cart])
 
     if (cart.length === 0) {
         return (
@@ -24,11 +38,54 @@ const Cart = () => {
     }
 
     return (
-        <div>
+        <div className="row mx-auto">
             <Head>
                 <title>Asgard Market - Cart</title>
             </Head>
-            <h1>cart</h1>
+            <div className="col-md-8 my-3 text-secondary table-responsive">
+                <h2 className="text-uppercase">Shopping Cart</h2>
+                <table className="table my-3">
+                    <tbody>
+                        {cart.map((item) => (
+                            <CartItem
+                                key={item._id}
+                                item={item}
+                                dispatch={dispatch}
+                                cart={cart}
+                            />
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="col-md-4 my-3 text-end text-uppercase text-secondary">
+                <form>
+                    <h2>Shipping</h2>
+
+                    <label htmlFor="address">Address</label>
+                    <input
+                        id="address"
+                        name="address"
+                        type="address"
+                        className="form-control mb-2"
+                    />
+
+                    <label htmlFor="mobile">Mobile</label>
+                    <input
+                        id="mobile"
+                        name="mobile"
+                        type="mobile"
+                        className="form-control mb-2"
+                    />
+
+                    <h3>
+                        Total: <span className="text-danger">${total}</span>{" "}
+                    </h3>
+
+                    <Link href={auth.user ? "#" : "/login"}>
+                        <a className="btn btn-dark my-2">Proceed to payment</a>
+                    </Link>
+                </form>
+            </div>
         </div>
     )
 }

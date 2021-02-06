@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import valid from "../utils/valid"
 import { postData } from "../utils/fetchData"
 import { DataContext } from "../store/GlobalState"
-import ACTIONS from "../store/Actions"
+import { ACTIONS } from "../store/Actions"
 
 const Signup = () => {
     const [name, setName] = useState("")
