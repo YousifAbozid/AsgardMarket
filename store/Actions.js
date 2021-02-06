@@ -27,3 +27,25 @@ export const addToCart = (product, cart) => {
         payload: [...cart, { ...product, quantity: 1 }],
     }
 }
+
+export const increase = (cart, id) => {
+    const updatedCart = [...cart]
+    updatedCart.forEach((item) => {
+        if (item._id === id) {
+            item.quantity += 1
+        }
+    })
+
+    return { type: ACTIONS.ADD_CART, payload: updatedCart }
+}
+
+export const decrease = (cart, id) => {
+    const updatedCart = [...cart]
+    updatedCart.forEach((item) => {
+        if (item._id === id) {
+            item.quantity -= 1
+        }
+    })
+
+    return { type: ACTIONS.ADD_CART, payload: updatedCart }
+}

@@ -2,7 +2,9 @@ import Head from "next/head"
 import Link from "next/link"
 import { useContext, useEffect, useState } from "react"
 import CartItem from "../components/CartItem"
+import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
+import { getData } from "../utils/fetchData"
 
 const Cart = () => {
     const { state, dispatch } = useContext(DataContext)
@@ -20,6 +22,40 @@ const Cart = () => {
 
         getTotal()
     }, [cart])
+
+    useEffect(() => {
+        const cartLocal = JSON.parse(localStorage.getItem("cartItems"))
+        if (cartLocal && cartLocal.length > 0) {
+            let newArray = []
+            const updateCart = async () => {
+                for (const item of cartLocal) {
+                    const response = await getData(`product/${item._id}`)
+                    const {
+                        _id,
+                        title,
+                        images,
+                        price,
+                        inStock,
+                    } = response.product
+                    if (inStock > 0) {
+                        newArray.push({
+                            _id,
+                            title,
+                            images,
+                            price,
+                            inStock,
+                            quantity:
+                                item.quantity > inStock ? 1 : item.quantity,
+                        })
+                    }
+                }
+
+                dispatch({ type: ACTIONS.ADD_CART, payload: newArray })
+            }
+
+            updateCart()
+        }
+    }, [])
 
     if (cart.length === 0) {
         return (
@@ -78,7 +114,7 @@ const Cart = () => {
                     />
 
                     <h3>
-                        Total: <span className="text-danger">${total}</span>{" "}
+                        Total: <span className="text-danger">${total}</span>
                     </h3>
 
                     <Link href={auth.user ? "#" : "/login"}>
