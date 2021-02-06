@@ -49,7 +49,7 @@ const Login = () => {
     return (
         <div>
             <Head>
-                <title>Login</title>
+                <title>Asgard Market - Login</title>
             </Head>
             <form
                 className="mx-auto my-4"

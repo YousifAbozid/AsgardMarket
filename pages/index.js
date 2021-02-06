@@ -9,7 +9,7 @@ const Home = (props) => {
     return (
         <div className="products">
             <Head>
-                <title>Asgard Market</title>
+                <title>Asgard Market - Store for what you desire!</title>
             </Head>
 
             {products.length === 0 ? (

@@ -7,7 +7,7 @@ class MyDocument extends Document {
                 <Head>
                     <meta
                         name="description"
-                        content="Shopping app build with next.js"
+                        content="Asgard Market is a Shopping app build with next.js"
                     />
                     <link
                         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"

@@ -53,7 +53,7 @@ const Signup = () => {
     return (
         <div>
             <Head>
-                <title>Signup</title>
+                <title>Asgard Market - Signup</title>
             </Head>
             <form
                 className="mx-auto my-4"
