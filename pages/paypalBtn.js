@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react"
 
-const paypalBtn = ({ total, address, mobile, state, disptach }) => {
+const paypalBtn = ({ total }) => {
     const refPaypalBtn = useRef()
-    const { auth, cart } = state
 
     useEffect(() => {
         paypal
@@ -23,12 +22,17 @@ const paypalBtn = ({ total, address, mobile, state, disptach }) => {
                     // This function captures the funds from the transaction.
                     return actions.order.capture().then(function (details) {
                         // This function shows a transaction success message to your buyer.
-                        console.log(data)
-                        alert(
+                        window.alert(
                             "Transaction completed by " +
                                 details.payer.name.given_name
                         )
                     })
+                },
+                onError: (error) => {
+                    console.log("Error: ", error)
+                    window.alert(
+                        "Transaction can't be completed, please check your bank."
+                    )
                 },
             })
             .render(refPaypalBtn.current)
