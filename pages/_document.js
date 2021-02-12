@@ -14,7 +14,10 @@ class MyDocument extends Document {
                         rel="stylesheet"
                     />
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+                    <script
+                        src="https://kit.fontawesome.com/2ac16e2682.js"
+                        crossOrigin="anonymous"
+                    ></script>
                     <script
                         src={`https://www.paypal.com/sdk/js?client-id=${process.env.SB_CLIENT_ID}`}
                     ></script>
