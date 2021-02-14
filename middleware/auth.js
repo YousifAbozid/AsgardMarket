@@ -12,8 +12,8 @@ const auth = async (requset, response) => {
         return response.status(401).json({ error: "Invalid token." })
     }
 
-    const user = User.findOne({ _id: decoded.id })
-    return user
+    const user = await User.findOne({ _id: decoded.id })
+    return { id: user._id }
 }
 
 export default auth
