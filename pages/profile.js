@@ -32,21 +32,11 @@ const profile = () => {
                             : "Admin Profile"}
                     </h3>
                     <div className="avatar">
-                        <img
-                            src={auth.user.avatar}
-                            alt={auth.user.avatar}
-                            style={{ width: "100px", height: "100px" }}
-                        />
-                        <span className="mb-3">
+                        <img src={auth.user.avatar} alt={auth.user.avatar} />
+                        <span>
                             <i className="fas fa-camera"></i>
-                            <label htmlFor="formFileSm" className="form-label">
-                                Change
-                            </label>
-                            <input
-                                className="form-control form-control-sm"
-                                id="formFileSm"
-                                type="file"
-                            />
+                            <p>Change</p>
+                            <input id="formFile" name="file" type="file" />
                         </span>
                     </div>
 
