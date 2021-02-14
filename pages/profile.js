@@ -4,6 +4,7 @@ import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
 import { patchData } from "../utils/fetchData"
 import valid from "../utils/valid"
+import { imageUpload } from "../utils/imageUpload"
 
 const profile = () => {
     const { state, dispatch } = useContext(DataContext)
@@ -36,6 +37,8 @@ const profile = () => {
             }
             updatePassword()
         }
+
+        if (name !== auth.user.name || avatar) uploadInfo()
     }
 
     const updatePassword = () => {
@@ -56,6 +59,39 @@ const profile = () => {
         )
     }
 
+    const changeAvatar = ({ target }) => {
+        const file = target.files[0]
+        if (!file) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "File does not exist." },
+            })
+        }
+        if (file.type !== "image/jpeg" && file.type !== "image/png") {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "Image format is incorrect." },
+            })
+        }
+        // 1024 * 1024 * 2 = 2mb
+        if (file.size > 1024 * 1024 * 2) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "Select an image not bigger than 2MB." },
+            })
+        }
+        setAvatar(file)
+    }
+
+    const uploadInfo = async () => {
+        let media
+        //dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+        if (avatar) {
+            media = await imageUpload([avatar])
+        }
+        console.log(media)
+    }
+
     if (!auth.user) return null
 
     return (
@@ -72,11 +108,24 @@ const profile = () => {
                             : "Admin Profile"}
                     </h3>
                     <div className="avatar">
-                        <img src={auth.user.avatar} alt={auth.user.avatar} />
+                        <img
+                            src={
+                                avatar
+                                    ? URL.createObjectURL(avatar)
+                                    : auth.user.avatar
+                            }
+                            alt="avatar"
+                        />
                         <span>
                             <i className="fas fa-camera"></i>
                             <p>Change</p>
-                            <input id="formFile" name="file" type="file" />
+                            <input
+                                id="formFile"
+                                name="file"
+                                type="file"
+                                accept="image/*"
+                                onChange={changeAvatar}
+                            />
                         </span>
                     </div>
 

@@ -41,3 +41,7 @@
     opacity: 0;
     cursor: pointer;
 }
+
+::-webkit-file-upload-button {
+    cursor: pointer;
+}
