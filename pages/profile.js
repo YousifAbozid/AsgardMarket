@@ -37,14 +37,23 @@ const profile = () => {
                             alt={auth.user.avatar}
                             style={{ width: "100px", height: "100px" }}
                         />
-                        <span>
+                        <span className="mb-3">
                             <i className="fas fa-camera"></i>
-                            <p>Change</p>
-                            <input type="file" name="file" id="file_up" />
+                            <label htmlFor="formFileSm" className="form-label">
+                                Change
+                            </label>
+                            <input
+                                className="form-control form-control-sm"
+                                id="formFileSm"
+                                type="file"
+                            />
                         </span>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="name">Name</label>
+
+                    <div className="mb-3">
+                        <label htmlFor="name" className="form-label">
+                            Name
+                        </label>
                         <input
                             name="name"
                             type="text"
@@ -54,18 +63,23 @@ const profile = () => {
                             onChange={({ target }) => setName(target.value)}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
+
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">
+                            Email
+                        </label>
                         <input
                             name="email"
                             type="text"
                             defaultValue={auth.user.email}
                             className="form-control"
-                            disabled="true"
+                            disabled={true}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">New Password</label>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label">
+                            New Password
+                        </label>
                         <input
                             name="password"
                             type="password"
@@ -75,8 +89,10 @@ const profile = () => {
                             onChange={({ target }) => setPassword(target.value)}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="cfPassword">Confirm New Password</label>
+                    <div className="mb-3">
+                        <label htmlFor="cfPassword" className="form-label">
+                            Confirm New Password
+                        </label>
                         <input
                             name="password1"
                             type="password"
@@ -88,9 +104,14 @@ const profile = () => {
                             }
                         />
                     </div>
-                    <button className="btn btn-info" disabled={notify.loading}>
-                        Update
-                    </button>
+                    <div className="mb-3">
+                        <button
+                            className="btn btn-info"
+                            disabled={notify.loading}
+                        >
+                            Update
+                        </button>
+                    </div>
                 </div>
                 <div className="col-md-8">
                     <h3>Orders</h3>
