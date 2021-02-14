@@ -26,7 +26,12 @@ const createOrder = async (request, response) => {
             total,
         })
 
-        response.status(201).json({ newOrder })
+        await newOrder.save()
+        response.status(201).json({
+            message:
+                "Payment Successfull, We will contact you to confirm the order soon.",
+            newOrder,
+        })
     } catch (error) {
         return response.status(500).json({ error: error.message })
     }

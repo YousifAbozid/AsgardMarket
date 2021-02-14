@@ -1,7 +1,10 @@
 import { useEffect, useRef } from "react"
+import { postData } from "../utils/fetchData"
+import { ACTIONS } from "../store/Actions"
 
-const paypalBtn = ({ total }) => {
+const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
     const refPaypalBtn = useRef()
+    const { auth, cart } = state
 
     useEffect(() => {
         paypal
@@ -19,20 +22,42 @@ const paypalBtn = ({ total }) => {
                     })
                 },
                 onApprove: function (data, actions) {
+                    dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { loading: true },
+                    })
                     // This function captures the funds from the transaction.
                     return actions.order.capture().then(function (details) {
                         // This function shows a transaction success message to your buyer.
-                        window.alert(
-                            "Transaction completed by " +
-                                details.payer.name.given_name
-                        )
+                        postData(
+                            "order",
+                            { address, mobile, cart, total },
+                            auth.token
+                        ).then((response) => {
+                            if (response.error) {
+                                return dispatch({
+                                    type: ACTIONS.NOTIFY,
+                                    payload: { error: response.error },
+                                })
+                            }
+
+                            dispatch({ type: ACTIONS.ADD_CART, payload: [] })
+                            return dispatch({
+                                type: ACTIONS.NOTIFY,
+                                payload: { success: response.message },
+                            })
+                        })
                     })
                 },
                 onError: (error) => {
                     console.log("Error: ", error)
-                    window.alert(
-                        "Transaction can't be completed, please check your bank."
-                    )
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: {
+                            error:
+                                "Transaction can't be completed, please check your bank.",
+                        },
+                    })
                 },
             })
             .render(refPaypalBtn.current)
