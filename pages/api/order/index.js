@@ -26,6 +26,10 @@ const createOrder = async (request, response) => {
             total,
         })
 
+        cart.filter((item) => {
+            return sold(item._id, item.quantity, item.inStock, item.sold)
+        })
+
         await newOrder.save()
         response.status(201).json({
             message:
@@ -35,4 +39,14 @@ const createOrder = async (request, response) => {
     } catch (error) {
         return response.status(500).json({ error: error.message })
     }
+}
+
+const sold = async (id, quantity, oldInStock, oldSold) => {
+    await Product.findByIdAndUpdate(
+        { _id: id },
+        {
+            inStock: oldInStock - quantity,
+            sold: oldSold + quantity,
+        }
+    )
 }

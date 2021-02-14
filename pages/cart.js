@@ -40,6 +40,7 @@ const Cart = () => {
                         images,
                         price,
                         inStock,
+                        sold,
                     } = response.product
                     if (inStock > 0) {
                         newArray.push({
@@ -48,6 +49,7 @@ const Cart = () => {
                             images,
                             price,
                             inStock,
+                            sold,
                             quantity:
                                 item.quantity > inStock ? 1 : item.quantity,
                         })
