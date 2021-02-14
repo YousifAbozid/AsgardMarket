@@ -51,6 +51,8 @@ const profile = () => {
                         payload: { error: response.error },
                     })
                 }
+                setPassword("")
+                setCfPassword("")
                 return dispatch({
                     type: ACTIONS.NOTIFY,
                     payload: { success: response.message },
@@ -85,11 +87,31 @@ const profile = () => {
 
     const uploadInfo = async () => {
         let media
-        //dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
         if (avatar) {
             media = await imageUpload([avatar])
         }
-        console.log(media)
+
+        patchData(
+            "user",
+            { name, avatar: avatar ? media[0].url : auth.user.avatar },
+            auth.token
+        ).then((response) => {
+            if (response.error) {
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { error: response.error },
+                })
+            }
+            dispatch({
+                type: ACTIONS.AUTH,
+                payload: { token: auth.token, user: response.user },
+            })
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { success: response.message },
+            })
+        })
     }
 
     if (!auth.user) return null
