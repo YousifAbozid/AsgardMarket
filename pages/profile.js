@@ -1,6 +1,9 @@
 import Head from "next/head"
 import { useContext, useEffect, useState } from "react"
+import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
+import { patchData } from "../utils/fetchData"
+import valid from "../utils/valid"
 
 const profile = () => {
     const { state, dispatch } = useContext(DataContext)
@@ -15,6 +18,43 @@ const profile = () => {
             setName(auth.user.name)
         }
     }, [auth])
+
+    const handleUpdateProfile = (event) => {
+        event.preventDefault()
+        if (password) {
+            const errorMessage = valid(
+                name,
+                auth.user.email,
+                password,
+                cfPassword
+            )
+            if (errorMessage) {
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { error: errorMessage },
+                })
+            }
+            updatePassword()
+        }
+    }
+
+    const updatePassword = () => {
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+        patchData("user/resetPassword", { password }, auth.token).then(
+            (response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+            }
+        )
+    }
 
     if (!auth.user) return null
 
@@ -50,7 +90,10 @@ const profile = () => {
                             value={name}
                             placeholder="Your Name"
                             className="form-control"
-                            onChange={({ target }) => setName(target.value)}
+                            onChange={({ target }) => {
+                                setName(target.value)
+                                dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                            }}
                         />
                     </div>
 
@@ -76,7 +119,10 @@ const profile = () => {
                             value={password}
                             placeholder="Your New Password"
                             className="form-control"
-                            onChange={({ target }) => setPassword(target.value)}
+                            onChange={({ target }) => {
+                                setPassword(target.value)
+                                dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                            }}
                         />
                     </div>
                     <div className="mb-3">
@@ -89,15 +135,18 @@ const profile = () => {
                             value={cfPassword}
                             placeholder="Confirm New Password"
                             className="form-control"
-                            onChange={({ target }) =>
+                            onChange={({ target }) => {
                                 setCfPassword(target.value)
-                            }
+                                dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                            }}
                         />
                     </div>
                     <div className="mb-3">
                         <button
                             className="btn btn-info"
                             disabled={notify.loading}
+                            type="submit"
+                            onClick={handleUpdateProfile}
                         >
                             Update
                         </button>
