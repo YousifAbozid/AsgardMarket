@@ -237,13 +237,17 @@ const profile = () => {
                                     <td className="p-2">date</td>
                                     <td className="p-2">total</td>
                                     <td className="p-2">delivered</td>
-                                    <td className="p-2">action</td>
+                                    <td className="p-2">Paid</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 {orders.map((order) => (
                                     <tr key={order._id}>
-                                        <td className="p-2">{order._id}</td>
+                                        <td className="p-2">
+                                            <Link href={`/order/${order._id}`}>
+                                                {order._id}
+                                            </Link>
+                                        </td>
                                         <td className="p-2">
                                             {new Date(
                                                 order.createdAt
@@ -258,9 +262,11 @@ const profile = () => {
                                             )}
                                         </td>
                                         <td className="p-2">
-                                            <Link href={`/order/${order._id}`}>
-                                                <a>Details</a>
-                                            </Link>
+                                            {order.paid ? (
+                                                <i className="fas fa-check text-success"></i>
+                                            ) : (
+                                                <i className="fas fa-times text-danger"></i>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

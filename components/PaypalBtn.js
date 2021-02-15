@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { postData } from "../utils/fetchData"
 import { ACTIONS } from "../store/Actions"
+import { DataContext } from "../store/GlobalState"
 
-const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
+const paypalBtn = ({ order }) => {
     const refPaypalBtn = useRef()
+    const { state, dispatch } = useContext(DataContext)
     const { auth, cart, orders } = state
 
     useEffect(() => {
@@ -15,7 +17,7 @@ const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
                         purchase_units: [
                             {
                                 amount: {
-                                    value: total,
+                                    value: order.total,
                                 },
                             },
                         ],
@@ -29,32 +31,31 @@ const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
                     // This function captures the funds from the transaction.
                     return actions.order.capture().then(function (details) {
                         // This function shows a transaction success message to your buyer.
-                        postData(
-                            "order",
-                            { address, mobile, cart, total },
-                            auth.token
-                        ).then((response) => {
-                            if (response.error) {
-                                return dispatch({
-                                    type: ACTIONS.NOTIFY,
-                                    payload: { error: response.error },
-                                })
-                            }
-                            const newOrder = {
-                                ...response.newOrder,
-                                user: auth.user,
-                            }
-
-                            dispatch({ type: ACTIONS.ADD_CART, payload: [] })
-                            dispatch({
-                                type: ACTIONS.ADD_ORDERS,
-                                payload: [...orders, newOrder],
-                            })
-                            return dispatch({
-                                type: ACTIONS.NOTIFY,
-                                payload: { success: response.message },
-                            })
-                        })
+                        // postData(
+                        //     "order",
+                        //     { address, mobile, cart, total },
+                        //     auth.token
+                        // ).then((response) => {
+                        //     if (response.error) {
+                        //         return dispatch({
+                        //             type: ACTIONS.NOTIFY,
+                        //             payload: { error: response.error },
+                        //         })
+                        //     }
+                        //     const newOrder = {
+                        //         ...response.newOrder,
+                        //         user: auth.user,
+                        //     }
+                        //     dispatch({ type: ACTIONS.ADD_CART, payload: [] })
+                        //     dispatch({
+                        //         type: ACTIONS.ADD_ORDERS,
+                        //         payload: [...orders, newOrder],
+                        //     })
+                        //     return dispatch({
+                        //         type: ACTIONS.NOTIFY,
+                        //         payload: { success: response.message },
+                        //     })
+                        // })
                     })
                 },
                 onError: (error) => {
