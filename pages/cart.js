@@ -1,19 +1,20 @@
 import Head from "next/head"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import CartItem from "../components/CartItem"
 import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
-import { getData } from "../utils/fetchData"
-import PaypalBtn from "./paypalBtn"
+import { getData, postData } from "../utils/fetchData"
 
 const Cart = () => {
     const { state, dispatch } = useContext(DataContext)
-    const { cart, auth } = state
+    const { cart, auth, orders } = state
     const [total, setTotal] = useState(0)
     const [address, setAddress] = useState("")
     const [mobile, setMobile] = useState("")
-    const [payment, setPayment] = useState(false)
+    const [callback, setCallback] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
         const getTotal = () => {
@@ -61,9 +62,9 @@ const Cart = () => {
 
             updateCart()
         }
-    }, [])
+    }, [callback])
 
-    const handlePayment = () => {
+    const handlePayment = async () => {
         if (!address) {
             return dispatch({
                 type: ACTIONS.NOTIFY,
@@ -76,7 +77,52 @@ const Cart = () => {
             })
         }
 
-        setPayment(true)
+        let newCart = []
+        for (const item of cart) {
+            const response = await getData(`product/${item._id}`)
+            if (response.product.inStock - item.quantity >= 0) {
+                newCart.push(item)
+            }
+        }
+
+        if (newCart.length < cart.length) {
+            setCallback(!callback)
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: {
+                    error:
+                        "The product is out of stock or the quantity is insufficient.",
+                },
+            })
+        }
+
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+        postData("order", { address, mobile, cart, total }, auth.token).then(
+            (response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+                dispatch({ type: ACTIONS.ADD_CART, payload: [] })
+
+                const newOrder = {
+                    ...response.newOrder,
+                    user: auth.user,
+                }
+                dispatch({
+                    type: ACTIONS.ADD_ORDERS,
+                    payload: [...orders, newOrder],
+                })
+                dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+
+                return router.push(`/order/${response.newOrder._id}`)
+            }
+        )
     }
 
     if (cart.length === 0) {
@@ -149,24 +195,14 @@ const Cart = () => {
                         Total: <span className="text-danger">${total}</span>
                     </h3>
 
-                    {payment ? (
-                        <PaypalBtn
-                            total={total}
-                            address={address}
-                            mobile={mobile}
-                            state={state}
-                            dispatch={dispatch}
-                        />
-                    ) : (
-                        <Link href={auth.user ? "#!" : "/login"}>
-                            <a
-                                className="btn btn-dark my-2"
-                                onClick={handlePayment}
-                            >
-                                Proceed to payment
-                            </a>
-                        </Link>
-                    )}
+                    <Link href={auth.user ? "#!" : "/login"}>
+                        <a
+                            className="btn btn-dark my-2"
+                            onClick={handlePayment}
+                        >
+                            Proceed to payment
+                        </a>
+                    </Link>
                 </form>
             </div>
         </div>
