@@ -12,11 +12,6 @@ const schema = new mongoose.Schema(
             required: true,
             trim: true,
         },
-        title: {
-            type: String,
-            required: true,
-            trim: true,
-        },
         description: {
             type: String,
             required: true,
@@ -51,7 +46,7 @@ const schema = new mongoose.Schema(
     }
 )
 
-const Product = mongoose.model("Product", schema)
+let Product = mongoose.models.product || mongoose.model("product", schema)
 
 export default Product
 

@@ -3,6 +3,7 @@ export const ACTIONS = {
     AUTH: "AUTH",
     ADD_CART: "ADD_CART",
     ADD_MODAL: "ADD_MODAL",
+    ADD_ORDERS: "ADD_ORDERS",
 }
 
 export const addToCart = (product, cart) => {

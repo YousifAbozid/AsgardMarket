@@ -6,9 +6,15 @@ import reducers from "./Reducers"
 export const DataContext = createContext()
 
 export const DataProvider = ({ children }) => {
-    const initialState = { notify: {}, auth: {}, cart: [], modal: {} }
+    const initialState = {
+        notify: {},
+        auth: {},
+        cart: [],
+        modal: {},
+        orders: [],
+    }
     const [state, dispatch] = useReducer(reducers, initialState)
-    const { cart } = state
+    const { cart, auth } = state
 
     useEffect(() => {
         const firstLogin = localStorage.getItem("firstLogin")
@@ -37,6 +43,20 @@ export const DataProvider = ({ children }) => {
     useEffect(() => {
         localStorage.setItem("cartItems", JSON.stringify(cart))
     }, [cart])
+
+    useEffect(() => {
+        if (auth.token) {
+            getData("order", auth.token).then((response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+                dispatch({ type: ACTIONS.ADD_ORDERS, payload: response.orders })
+            })
+        }
+    }, [auth.token])
 
     return (
         <DataContext.Provider value={{ state, dispatch }}>
