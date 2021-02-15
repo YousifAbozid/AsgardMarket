@@ -1,6 +1,6 @@
-import connectDB from "../../../utils/connectDB"
-import Order from "../../../models/order"
-import auth from "../../../middleware/auth"
+import connectDB from "../../../../utils/connectDB"
+import Order from "../../../../models/order"
+import auth from "../../../../middleware/auth"
 
 connectDB()
 
@@ -16,11 +16,14 @@ const paymentOrder = async (request, response) => {
     try {
         const result = await auth(request, response)
         const { id } = request.query
+        const { paymentId } = request.body
 
         await Order.findByIdAndUpdate(
             { _id: id },
             {
                 paid: true,
+                paymentId,
+                method: "Paypal",
                 dateOfPayment: new Date().toISOString(),
             }
         )

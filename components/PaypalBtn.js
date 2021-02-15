@@ -32,34 +32,38 @@ const paypalBtn = ({ order }) => {
                     // This function captures the funds from the transaction.
                     return actions.order.capture().then(function (details) {
                         // This function shows a transaction success message to your buyer.
-                        patchData(`order/${order._id}`, null, auth.token).then(
-                            (response) => {
-                                if (response.error) {
-                                    return dispatch({
-                                        type: ACTIONS.NOTIFY,
-                                        payload: { error: response.error },
-                                    })
-                                }
-
-                                dispatch(
-                                    updateItem(
-                                        orders,
-                                        order._id,
-                                        {
-                                            ...order,
-                                            paid: true,
-                                            dateOfPayment: new Date().toISOString(),
-                                        },
-                                        ACTIONS.ADD_ORDERS
-                                    )
-                                )
-
+                        patchData(
+                            `order/payment/${order._id}`,
+                            { paymentId: details.payer.payer_id },
+                            auth.token
+                        ).then((response) => {
+                            if (response.error) {
                                 return dispatch({
                                     type: ACTIONS.NOTIFY,
-                                    payload: { success: response.message },
+                                    payload: { error: response.error },
                                 })
                             }
-                        )
+
+                            dispatch(
+                                updateItem(
+                                    orders,
+                                    order._id,
+                                    {
+                                        ...order,
+                                        paid: true,
+                                        paymentId: details.payer.payer_id,
+                                        method: "Paypal",
+                                        dateOfPayment: details.create_time,
+                                    },
+                                    ACTIONS.ADD_ORDERS
+                                )
+                            )
+
+                            return dispatch({
+                                type: ACTIONS.NOTIFY,
+                                payload: { success: response.message },
+                            })
+                        })
                     })
                 },
                 onError: (error) => {

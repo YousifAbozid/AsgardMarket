@@ -40,6 +40,10 @@ const OrderDetail = ({ orderDetails }) => {
                             </div>
 
                             <h3>Payment</h3>
+                            {order.method && <h6>Method: {order.method}</h6>}
+                            {order.paymentId && (
+                                <h6>PaymentId: {order.paymentId}</h6>
+                            )}
                             <div
                                 className={`alert ${
                                     order.paid
