@@ -90,12 +90,14 @@ const OrderDetail = ({ orderDetails }) => {
                         </div>
                     </div>
 
-                    <div className="p-4">
-                        <h4 className="mb-4 text-uppercase">
-                            Total: ${order.total}
-                        </h4>
-                        <PaypalBtn order={order} />
-                    </div>
+                    {!order.paid && (
+                        <div className="p-4">
+                            <h4 className="mb-4 text-uppercase">
+                                Total: ${order.total}
+                            </h4>
+                            <PaypalBtn order={order} />
+                        </div>
+                    )}
                 </div>
             ))}
         </>

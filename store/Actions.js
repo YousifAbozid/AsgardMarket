@@ -56,3 +56,8 @@ export const deleteItem = (cart, id, type) => {
     const newCart = cart.filter((item) => item._id !== id)
     return { type, payload: newCart }
 }
+
+export const updateItem = (orders, id, post, type) => {
+    const newOrders = orders.map((item) => (item._id === id ? post : item))
+    return { type, payload: newOrders }
+}
