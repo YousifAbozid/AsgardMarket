@@ -78,6 +78,7 @@ const DetailProduct = (props) => {
                 <div className="my-2">{product.content}</div>
                 <button
                     className="btn btn-dark d-block my-3 px-5"
+                    disabled={product.inStock === 0 ? true : false}
                     onClick={() => dispatch(addToCart(product, cart))}
                 >
                     Buy
