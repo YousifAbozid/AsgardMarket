@@ -40,11 +40,15 @@ const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
                                     payload: { error: response.error },
                                 })
                             }
+                            const newOrder = {
+                                ...response.newOrder,
+                                user: auth.user,
+                            }
 
                             dispatch({ type: ACTIONS.ADD_CART, payload: [] })
                             dispatch({
                                 type: ACTIONS.ADD_ORDERS,
-                                payload: [...orders, response.newOrder],
+                                payload: [...orders, newOrder],
                             })
                             return dispatch({
                                 type: ACTIONS.NOTIFY,
