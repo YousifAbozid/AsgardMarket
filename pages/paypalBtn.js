@@ -4,7 +4,7 @@ import { ACTIONS } from "../store/Actions"
 
 const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
     const refPaypalBtn = useRef()
-    const { auth, cart } = state
+    const { auth, cart, orders } = state
 
     useEffect(() => {
         paypal
@@ -42,6 +42,10 @@ const paypalBtn = ({ total, address, mobile, state, dispatch }) => {
                             }
 
                             dispatch({ type: ACTIONS.ADD_CART, payload: [] })
+                            dispatch({
+                                type: ACTIONS.ADD_ORDERS,
+                                payload: [...orders, response.newOrder],
+                            })
                             return dispatch({
                                 type: ACTIONS.NOTIFY,
                                 payload: { success: response.message },

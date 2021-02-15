@@ -1,5 +1,6 @@
 import Head from "next/head"
 import { useContext, useEffect, useState } from "react"
+import Link from "next/link"
 import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
 import { patchData } from "../utils/fetchData"
@@ -8,7 +9,7 @@ import { imageUpload } from "../utils/imageUpload"
 
 const profile = () => {
     const { state, dispatch } = useContext(DataContext)
-    const { auth, notify } = state
+    const { auth, notify, orders } = state
     const [name, setName] = useState("")
     const [avatar, setAvatar] = useState("")
     const [password, setPassword] = useState("")
@@ -224,7 +225,48 @@ const profile = () => {
                     </div>
                 </div>
                 <div className="col-md-8">
-                    <h3>Orders</h3>
+                    <h3 className="text-uppercase">Orders</h3>
+                    <div className="my-3">
+                        <table
+                            className="table-bordered table-hover w-100 text-uppercase"
+                            style={{ minWidth: "600px", cursor: "pointer" }}
+                        >
+                            <thead className="bg-light font-weight-bold">
+                                <tr>
+                                    <td className="p-2">id</td>
+                                    <td className="p-2">date</td>
+                                    <td className="p-2">total</td>
+                                    <td className="p-2">delivered</td>
+                                    <td className="p-2">action</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.map((order) => (
+                                    <tr key={order._id}>
+                                        <td className="p-2">{order._id}</td>
+                                        <td className="p-2">
+                                            {new Date(
+                                                order.createdAt
+                                            ).toLocaleDateString()}
+                                        </td>
+                                        <td className="p-2">${order.total}</td>
+                                        <td className="p-2">
+                                            {order.delivered ? (
+                                                <i className="fas fa-check text-success"></i>
+                                            ) : (
+                                                <i className="fas fa-times text-danger"></i>
+                                            )}
+                                        </td>
+                                        <td className="p-2">
+                                            <Link href={`/order/${order._id}`}>
+                                                <a>Details</a>
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
         </div>
