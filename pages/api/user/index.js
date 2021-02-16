@@ -9,6 +9,25 @@ export default async (request, response) => {
         case "PATCH":
             await uploadInfo(request, response)
             break
+        case "GET":
+            await getUsers(request, response)
+            break
+    }
+}
+
+const getUsers = async (request, response) => {
+    try {
+        const result = await auth(request, response)
+        if (result.role !== "admin") {
+            return response
+                .status(401)
+                .json({ error: "Unauthorized, you are not an admin." })
+        }
+
+        const users = await User.find().select("-password")
+        response.json({ users })
+    } catch (error) {
+        response.status(500).json({ error: error.message })
     }
 }
 
