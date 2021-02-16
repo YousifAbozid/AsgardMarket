@@ -71,6 +71,9 @@ export const DataProvider = ({ children }) => {
                     })
                 })
             }
+        } else {
+            dispatch({ type: ACTIONS.ADD_ORDERS, payload: [] })
+            dispatch({ type: ACTIONS.ADD_USERS, payload: [] })
         }
     }, [auth.token])
 
