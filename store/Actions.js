@@ -53,12 +53,12 @@ export const decrease = (cart, id) => {
     return { type: ACTIONS.ADD_CART, payload: updatedCart }
 }
 
-export const deleteItem = (cart, id, type) => {
-    const newCart = cart.filter((item) => item._id !== id)
-    return { type, payload: newCart }
+export const deleteItem = (data, id, type) => {
+    const newData = data.filter((item) => item._id !== id)
+    return { type, payload: newData }
 }
 
-export const updateItem = (orders, id, post, type) => {
-    const newOrders = orders.map((item) => (item._id === id ? post : item))
-    return { type, payload: newOrders }
+export const updateItem = (data, id, post, type) => {
+    const newData = data.map((item) => (item._id === id ? post : item))
+    return { type, payload: newData }
 }

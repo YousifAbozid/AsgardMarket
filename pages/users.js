@@ -6,6 +6,7 @@ import { DataContext } from "../store/GlobalState"
 const users = () => {
     const { state, dispatch } = useContext(DataContext)
     const { users, auth } = state
+    let root = auth.user ? (auth.user.root ? true : false) : false
 
     return (
         <div className="table-responsive">
@@ -69,9 +70,8 @@ const users = () => {
                                 >
                                     <Link
                                         href={
-                                            (auth.user.root &&
-                                                auth.user.email) ||
-                                            user.email
+                                            root &&
+                                            auth.user.email !== user.email
                                                 ? `/edit_user/${user._id}`
                                                 : "#"
                                         }
@@ -83,8 +83,7 @@ const users = () => {
                                             ></i>
                                         </a>
                                     </Link>
-                                    {(auth.user.root && auth.user.email) ||
-                                    user.email ? (
+                                    {root && auth.user.email !== user.email ? (
                                         <i
                                             className="fas fa-trash text-danger"
                                             title="Delete"
@@ -102,8 +101,6 @@ const users = () => {
                                             className="fas fa-trash text-danger"
                                             title="Delete"
                                             aria-hidden="true"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal"
                                             style={{
                                                 marginLeft: "20px",
                                                 marginTop: "4px",

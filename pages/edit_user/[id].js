@@ -2,7 +2,9 @@ import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState, useContext, useEffect } from "react"
+import { ACTIONS, updateItem } from "../../store/Actions"
 import { DataContext } from "../../store/GlobalState"
+import { patchData } from "../../utils/fetchData"
 
 const edit_user = () => {
     const { state, dispatch } = useContext(DataContext)
@@ -11,6 +13,7 @@ const edit_user = () => {
     const { id } = router.query
     const [editUser, setEditUser] = useState([])
     const [checkAdmin, setCheckAdmin] = useState(false)
+    const [num, setNum] = useState(0)
 
     useEffect(() => {
         users.forEach((user) => {
@@ -19,11 +22,46 @@ const edit_user = () => {
                 setCheckAdmin(user.role === "admin" ? true : false)
             }
         })
-    }, [])
+    }, [users])
 
-    const handleCheck = () => {}
+    const handleCheck = () => {
+        setCheckAdmin(!checkAdmin)
+        setNum(num + 1)
+    }
 
-    const handleUpdateProfile = () => {}
+    const handleUpdateProfile = async () => {
+        let role = checkAdmin ? "admin" : "user"
+
+        if (num % 2 !== 0) {
+            dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+            await patchData(`user/${editUser._id}`, { role }, auth.token).then(
+                (response) => {
+                    if (response.error) {
+                        return dispatch({
+                            type: ACTIONS.NOTIFY,
+                            payload: { error: response.error },
+                        })
+                    }
+
+                    setNum(0)
+
+                    dispatch(
+                        updateItem(
+                            users,
+                            editUser._id,
+                            { ...editUser, role },
+                            ACTIONS.ADD_USERS
+                        )
+                    )
+
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { success: response.message },
+                    })
+                }
+            )
+        }
+    }
 
     return (
         <div className="edit_user my-3">
@@ -42,7 +80,7 @@ const edit_user = () => {
                     </i>
                 </Link>
             </div>
-            <div className="col-md-4 max-auto my-4">
+            <div className="col-md-4 mx-auto my-4">
                 <h2 className="text-uppercase text-secondary">Edit User</h2>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">
