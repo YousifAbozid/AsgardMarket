@@ -1,7 +1,14 @@
 import Link from "next/link"
 import PaypalBtn from "./PaypalBtn"
+import { useContext } from "react"
+import { DataContext } from "../store/GlobalState"
 
 const OrderDetail = ({ orderDetails }) => {
+    const { state, dispatch } = useContext(DataContext)
+    const { auth } = state
+
+    const handleDelivered = (id) => {}
+
     return (
         <>
             {orderDetails.map((order) => (
@@ -37,6 +44,17 @@ const OrderDetail = ({ orderDetails }) => {
                                 {order.delivered
                                     ? `Delivered At ${order.updatedAt}`
                                     : "Not Delivered yet"}
+                                {auth.user.role === "admin" &&
+                                    !order.delivered && (
+                                        <button
+                                            className="btn btn-dark text-uppercase"
+                                            onClick={() =>
+                                                handleDelivered(order._id)
+                                            }
+                                        >
+                                            Mark As Delivered
+                                        </button>
+                                    )}
                             </div>
 
                             <h3>Payment</h3>
@@ -94,7 +112,7 @@ const OrderDetail = ({ orderDetails }) => {
                         </div>
                     </div>
 
-                    {!order.paid && (
+                    {!order.paid && auth.user.role !== "admin" && (
                         <div className="p-4">
                             <h4 className="mb-4 text-uppercase">
                                 Total: ${order.total}

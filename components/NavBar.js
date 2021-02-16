@@ -23,6 +23,29 @@ const NavBar = () => {
         localStorage.removeItem("firstLogin")
         dispatch({ type: ACTIONS.AUTH, payload: {} })
         dispatch({ type: ACTIONS.NOTIFY, payload: { success: "Logged out" } })
+        router.push("/")
+    }
+
+    const adminRoute = () => {
+        return (
+            <>
+                <li>
+                    <Link href="/users">
+                        <a className="dropdown-item">Users</a>
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/create">
+                        <a className="dropdown-item">Products</a>
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/categories">
+                        <a className="dropdown-item">Categories</a>
+                    </Link>
+                </li>
+            </>
+        )
     }
 
     const loggedRouter = () => {
@@ -55,10 +78,13 @@ const NavBar = () => {
                             <a className="dropdown-item">Profile</a>
                         </Link>
                     </li>
+                    {auth.user.role === "admin" && adminRoute()}
+                    <li>
+                        <hr className="dropdown-divider" />
+                    </li>
                     <li>
                         <button
                             className="dropdown-item"
-                            href="#"
                             onClick={handleLogout}
                         >
                             Logout

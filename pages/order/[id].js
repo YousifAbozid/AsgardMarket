@@ -16,6 +16,8 @@ const detailOrder = () => {
         setOrderDetails(newArray)
     }, [orders])
 
+    if (!auth.user) return null
+
     return (
         <div className="my-3">
             <Head>
