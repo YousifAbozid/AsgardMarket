@@ -2,12 +2,47 @@ import Link from "next/link"
 import PaypalBtn from "./PaypalBtn"
 import { useContext } from "react"
 import { DataContext } from "../store/GlobalState"
+import { patchData } from "../utils/fetchData"
+import { ACTIONS, updateItem } from "../store/Actions"
 
 const OrderDetail = ({ orderDetails }) => {
     const { state, dispatch } = useContext(DataContext)
-    const { auth } = state
+    const { auth, orders } = state
 
-    const handleDelivered = (id) => {}
+    const handleDelivered = (order) => {
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+        patchData(`order/delivered/${order._id}`, null, auth.token).then(
+            (response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+
+                const {
+                    paid,
+                    delivered,
+                    dateOfPayment,
+                    method,
+                } = response.result
+
+                dispatch(
+                    updateItem(
+                        orders,
+                        order._id,
+                        { ...order, paid, delivered, dateOfPayment, method },
+                        ACTIONS.ADD_ORDERS
+                    )
+                )
+
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+            }
+        )
+    }
 
     return (
         <>
@@ -49,7 +84,7 @@ const OrderDetail = ({ orderDetails }) => {
                                         <button
                                             className="btn btn-dark text-uppercase"
                                             onClick={() =>
-                                                handleDelivered(order._id)
+                                                handleDelivered(order)
                                             }
                                         >
                                             Mark As Delivered

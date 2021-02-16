@@ -224,6 +224,7 @@ const profile = () => {
                         </button>
                     </div>
                 </div>
+
                 <div className="col-md-8">
                     <h3 className="text-uppercase">Orders</h3>
                     <div className="my-3 table-responsive">
