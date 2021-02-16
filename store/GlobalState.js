@@ -12,6 +12,7 @@ export const DataProvider = ({ children }) => {
         cart: [],
         modal: {},
         orders: [],
+        users: [],
     }
     const [state, dispatch] = useReducer(reducers, initialState)
     const { cart, auth } = state
@@ -55,6 +56,21 @@ export const DataProvider = ({ children }) => {
                 }
                 dispatch({ type: ACTIONS.ADD_ORDERS, payload: response.orders })
             })
+
+            if (auth.user.role === "admin") {
+                getData("user", auth.token).then((response) => {
+                    if (response.error) {
+                        return dispatch({
+                            type: ACTIONS.NOTIFY,
+                            payload: { error: response.error },
+                        })
+                    }
+                    dispatch({
+                        type: ACTIONS.ADD_USERS,
+                        payload: response.users,
+                    })
+                })
+            }
         }
     }, [auth.token])
 
