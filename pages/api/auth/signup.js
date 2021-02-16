@@ -39,7 +39,9 @@ const signup = async (request, response) => {
 
         await newUser.save()
 
-        response.status(201).json({ message: "Signed up successfully!" })
+        response
+            .status(201)
+            .json({ message: "Signed up successfully, Login now!" })
     } catch (error) {
         response.status(500).json({ error: error.message })
     }

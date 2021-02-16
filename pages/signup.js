@@ -44,6 +44,11 @@ const Signup = () => {
             })
         }
 
+        setName("")
+        setEmail("")
+        setPassword("")
+        setCfPassword("")
+
         return dispatch({
             type: ACTIONS.NOTIFY,
             payload: { success: response.message },
