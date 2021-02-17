@@ -27,9 +27,18 @@ const updateCategory = async (request, response) => {
         const { id } = request.query
         const { name } = request.body
 
-        await Category.findByIdAndUpdate({ _id: id }, { name })
+        const updatedCategory = await Category.findByIdAndUpdate(
+            { _id: id },
+            { name }
+        )
 
-        response.json({ message: "Updated category successfully." })
+        response.json({
+            message: "Updated category successfully.",
+            category: {
+                ...updatedCategory._doc,
+                name,
+            },
+        })
     } catch (error) {
         response.status(500).json({ error: error.message })
     }

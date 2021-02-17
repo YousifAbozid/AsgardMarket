@@ -1,13 +1,14 @@
 import Head from "next/head"
 import { useContext, useState } from "react"
-import { ACTIONS } from "../store/Actions"
+import { ACTIONS, updateItem } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
-import { postData } from "../utils/fetchData"
+import { postData, putData } from "../utils/fetchData"
 
 const categories = () => {
     const { state, dispatch } = useContext(DataContext)
     const { categories, auth } = state
     const [name, setName] = useState("")
+    const [id, setId] = useState("")
 
     const createCategory = async () => {
         if (auth.user.role !== "admin") {
@@ -22,24 +23,52 @@ const categories = () => {
                 payload: { error: "Name can't be empty." },
             })
         }
+
         dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
 
-        const response = await postData("categories", { name }, auth.token)
-        if (response.error) {
-            return dispatch({
-                type: ACTIONS.NOTIFY,
-                payload: { error: response.error },
+        let response
+        if (id) {
+            response = await putData(`categories/${id}`, { name }, auth.token)
+            if (response.error) {
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { error: response.error },
+                })
+            }
+            dispatch(
+                updateItem(
+                    categories,
+                    id,
+                    response.category,
+                    ACTIONS.ADD_CATEGORIES
+                )
+            )
+        } else {
+            response = await postData("categories", { name }, auth.token)
+            if (response.error) {
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { error: response.error },
+                })
+            }
+            dispatch({
+                type: ACTIONS.ADD_CATEGORIES,
+                payload: [...categories, response.newCategory],
             })
         }
 
-        dispatch({
-            type: ACTIONS.ADD_CATEGORIES,
-            payload: [...categories, response.newCategory],
-        })
+        setId("")
+        setName("")
+
         return dispatch({
             type: ACTIONS.NOTIFY,
             payload: { success: response.message },
         })
+    }
+
+    const handleEditCategory = async (category) => {
+        setId(category._id)
+        setName(category.name)
     }
 
     if (!auth.user) return null
@@ -55,17 +84,29 @@ const categories = () => {
                     className="form-control"
                     value={name}
                     onChange={({ target }) => setName(target.value)}
-                    placeholder="Add a new category"
+                    placeholder={id ? "Update category" : "Add a new category"}
                     aria-label="Add a new category"
                 />
                 <button
-                    className="btn btn-outline-secondary"
-                    type="submit"
+                    className="btn btn-outline-dark"
+                    type="button"
                     style={{ marginLeft: "10px" }}
                     onClick={createCategory}
                 >
-                    Add
+                    {id ? "Update" : "Add"}
                 </button>
+                {id && (
+                    <button
+                        className="btn btn-primary"
+                        style={{ marginLeft: "10px" }}
+                        onClick={() => {
+                            setId("")
+                            setName("")
+                        }}
+                    >
+                        Cancel Editing
+                    </button>
+                )}
             </div>
 
             {categories.map((category) => (
@@ -76,6 +117,7 @@ const categories = () => {
                         <div>
                             <i
                                 className="fas fa-edit text-info"
+                                onClick={() => handleEditCategory(category)}
                                 style={{
                                     cursor: "pointer",
                                     marginRight: "20px",
