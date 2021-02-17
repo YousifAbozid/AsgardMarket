@@ -83,7 +83,10 @@ const categories = () => {
                     type="text"
                     className="form-control"
                     value={name}
-                    onChange={({ target }) => setName(target.value)}
+                    onChange={({ target }) => {
+                        setName(target.value)
+                        dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+                    }}
                     placeholder={id ? "Update category" : "Add a new category"}
                     aria-label="Add a new category"
                 />
@@ -126,6 +129,20 @@ const categories = () => {
                             <i
                                 className="fas fa-trash text-danger"
                                 style={{ cursor: "pointer" }}
+                                data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop"
+                                onClick={() =>
+                                    dispatch({
+                                        type: ACTIONS.ADD_MODAL,
+                                        payload: {
+                                            data: categories,
+                                            title: category.name,
+                                            id: category._id,
+                                            type: ACTIONS.ADD_CATEGORIES,
+                                            toDelete: "Category",
+                                        },
+                                    })
+                                }
                             />
                         </div>
                     </div>

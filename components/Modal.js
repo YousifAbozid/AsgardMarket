@@ -28,6 +28,26 @@ const Modal = () => {
             )
         }
 
+        if (modal.type === ACTIONS.ADD_CATEGORIES) {
+            dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
+            await deleteData(`categories/${modal.id}`, auth.token).then(
+                (response) => {
+                    if (response.error) {
+                        return dispatch({
+                            type: ACTIONS.NOTIFY,
+                            payload: { error: response.error },
+                        })
+                    }
+
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { success: response.message },
+                    })
+                }
+            )
+        }
+
         dispatch(deleteItem(modal.data, modal.id, modal.type))
         dispatch({ type: ACTIONS.ADD_MODAL, payload: {} })
     }
