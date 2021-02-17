@@ -1,22 +1,45 @@
 import { useContext } from "react"
 import { DataContext } from "../store/GlobalState"
 import { ACTIONS, deleteItem } from "../store/Actions"
+import { deleteData } from "../utils/fetchData"
 
 const Modal = () => {
     const { state, dispatch } = useContext(DataContext)
-    const { modal } = state
+    const { modal, auth } = state
 
-    const handleDelete = () => {
-        dispatch(deleteItem(modal.data, modal.id, ACTIONS.ADD_CART))
+    const handleDelete = async () => {
+        if (modal.type === ACTIONS.ADD_USERS) {
+            dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
+            await deleteData(`user/${modal.id}`, auth.token).then(
+                (response) => {
+                    if (response.error) {
+                        return dispatch({
+                            type: ACTIONS.NOTIFY,
+                            payload: { error: response.error },
+                        })
+                    }
+
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { success: response.message },
+                    })
+                }
+            )
+        }
+
+        dispatch(deleteItem(modal.data, modal.id, modal.type))
         dispatch({ type: ACTIONS.ADD_MODAL, payload: {} })
     }
 
     return (
         <div
             className="modal fade"
-            id="exampleModal"
+            id="staticBackdrop"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
             tabIndex="-1"
-            aria-labelledby="exampleModalLabel"
+            aria-labelledby="staticBackdropLabel"
             aria-hidden="true"
         >
             <div className="modal-dialog">
@@ -24,7 +47,7 @@ const Modal = () => {
                     <div className="modal-header">
                         <h5
                             className="modal-title text-capitalize"
-                            id="exampleModalLabel"
+                            id="staticBackdropLabel"
                         >
                             {modal.title}
                         </h5>
@@ -33,16 +56,28 @@ const Modal = () => {
                             className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
+                            onClick={() =>
+                                dispatch({
+                                    type: ACTIONS.ADD_MODAL,
+                                    payload: {},
+                                })
+                            }
                         ></button>
                     </div>
                     <div className="modal-body">
-                        Are you sure you want to delete this item?
+                        Are you sure you want to delete this {modal.toDelete}?
                     </div>
                     <div className="modal-footer">
                         <button
                             type="button"
                             className="btn btn-secondary"
                             data-bs-dismiss="modal"
+                            onClick={() =>
+                                dispatch({
+                                    type: ACTIONS.ADD_MODAL,
+                                    payload: {},
+                                })
+                            }
                         >
                             Cancel
                         </button>

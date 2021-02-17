@@ -1,34 +1,14 @@
 import Head from "next/head"
 import Link from "next/link"
 import { useContext } from "react"
-import { deleteItem } from "../store/Actions"
+import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
-import { deleteData } from "../utils/fetchData"
 
 const users = () => {
     const { state, dispatch } = useContext(DataContext)
-    const { users, auth, modal } = state
-    let root = auth.user ? (auth.user.root ? true : false) : false
+    const { users, auth } = state
 
-    const handleDelete = async () => {
-        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
-
-        await deleteData(`user/${userid}`, auth.token).then((response) => {
-            if (response.error) {
-                return dispatch({
-                    type: ACTIONS.NOTIFY,
-                    payload: { error: response.error },
-                })
-            }
-
-            dispatch(deleteItem(users, userid, ACTIONS.ADD_USERS))
-
-            return dispatch({
-                type: ACTIONS.NOTIFY,
-                payload: { success: response.message },
-            })
-        })
-    }
+    if (!auth.user) return null
 
     return (
         <div className="table-responsive">
@@ -92,7 +72,7 @@ const users = () => {
                                 >
                                     <Link
                                         href={
-                                            root &&
+                                            auth.user.root &&
                                             auth.user.email !== user.email
                                                 ? `/edit_user/${user._id}`
                                                 : "#"
@@ -105,14 +85,26 @@ const users = () => {
                                             ></i>
                                         </a>
                                     </Link>
-                                    {root && auth.user.email !== user.email ? (
+                                    {auth.user.root &&
+                                    auth.user.email !== user.email ? (
                                         <i
                                             className="fas fa-trash text-danger"
                                             title="Delete"
                                             aria-hidden="true"
-                                            onClick={handleDelete}
+                                            onClick={() =>
+                                                dispatch({
+                                                    type: ACTIONS.ADD_MODAL,
+                                                    payload: {
+                                                        data: users,
+                                                        title: user.name,
+                                                        id: user._id,
+                                                        type: ACTIONS.ADD_USERS,
+                                                        toDelete: "User",
+                                                    },
+                                                })
+                                            }
                                             data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal"
+                                            data-bs-target="#staticBackdrop"
                                             style={{
                                                 marginLeft: "20px",
                                                 marginTop: "4px",

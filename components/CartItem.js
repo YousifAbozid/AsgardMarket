@@ -51,7 +51,7 @@ const CartItem = ({ item, dispatch, cart }) => {
                     aria-hidden="true"
                     style={{ fontSize: "18px" }}
                     data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
+                    data-bs-target="#staticBackdrop"
                     onClick={() =>
                         dispatch({
                             type: ACTIONS.ADD_MODAL,
@@ -59,6 +59,8 @@ const CartItem = ({ item, dispatch, cart }) => {
                                 data: cart,
                                 title: item.title,
                                 id: item._id,
+                                type: ACTIONS.ADD_CART,
+                                toDelete: "Product",
                             },
                         })
                     }
