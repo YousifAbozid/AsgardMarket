@@ -29,7 +29,9 @@ const createCategory = async (request, response) => {
             return response.status(400).json({ error: "Name Can't be empty." })
         }
 
-        const newCategory = await new Category({ name })
+        const newCategory = new Category({ name })
+
+        await newCategory.save()
 
         response.json({
             message: "Created category successfully.",
