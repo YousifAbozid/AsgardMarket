@@ -97,6 +97,7 @@ const Cart = () => {
         }
 
         dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
         postData("order", { address, mobile, cart, total }, auth.token).then(
             (response) => {
                 if (response.error) {

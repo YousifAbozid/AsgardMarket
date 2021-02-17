@@ -31,7 +31,9 @@ const DetailProduct = (props) => {
 
     return (
         <div className="row detail_page">
-            <Head>Detail Product</Head>
+            <Head>
+                <title>Asgard Market - Product Details</title>
+            </Head>
             <div className="col-md-6">
                 <img
                     src={product.images[tab].url}
