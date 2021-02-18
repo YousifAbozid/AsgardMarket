@@ -1,8 +1,8 @@
 import Head from "next/head"
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { getData } from "../../utils/fetchData"
 import { DataContext } from "../../store/GlobalState"
-import { addToCart } from "../../store/Actions"
+import { ACTIONS, addToCart } from "../../store/Actions"
 
 const DetailProduct = (props) => {
     const [product] = useState(props.product)
@@ -14,6 +14,28 @@ const DetailProduct = (props) => {
         if (index === tab) return "active"
         return ""
     }
+
+    // -------------- to handle none existing product
+    useEffect(() => {
+        if (props.error) {
+            dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: props.error },
+            })
+        }
+    }, [])
+
+    if (product === null) {
+        return (
+            <div>
+                <Head>
+                    <title>Asgard Market - No Product</title>
+                </Head>
+                <h1>Ops, nothing here 😵</h1>
+            </div>
+        )
+    }
+    // ------------------
 
     // this useEffect is equal to isActive function, smart solution for real.
     // const imageRef = useRef()
@@ -98,8 +120,14 @@ export async function getServerSideProps({ params: { id } }) {
     // this is server side rendering so it will print in the console here only not in the browser
     const response = await getData(`product/${id}`)
 
+    // adding || null beacuse next.js can't handle undefiened in parsing to an object
+    // javascript can handle it with JSON.parse() without any problems
+    // you can read this discussion for more info: https://github.com/vercel/next.js/discussions/11209
     return {
-        props: { product: response.product },
+        props: {
+            product: response.product || null,
+            error: response.error || null,
+        },
     }
 }
 

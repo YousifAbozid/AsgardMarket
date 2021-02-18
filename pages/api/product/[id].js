@@ -20,11 +20,14 @@ const getProduct = async (request, response) => {
         const { id } = request.query
         const product = await Product.findById(id)
         if (!product) {
-            response.status(404).json({ error: "This product doesn't exist." })
+            return response
+                .status(404)
+                .json({ error: "This product doesn't exist." })
         }
-        response.json({ product })
+
+        return response.json({ product })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
 
