@@ -7,7 +7,6 @@ const ProductsManager = () => {
     const { state, dispatch } = useContext(DataContext)
     const { auth, categories } = state
 
-    const [productId, setProductId] = useState("")
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState(0)
     const [inStock, setInStock] = useState(0)
@@ -76,17 +75,6 @@ const ProductsManager = () => {
 
             <form className="row">
                 <div className="col-md-6">
-                    <input
-                        type="text"
-                        className="form-control d-block my-3 w-100 p-2"
-                        placeholder="Product ID"
-                        value={productId}
-                        onChange={({ target }) => {
-                            setProductId(target.value)
-                            dispatch({ type: ACTIONS.NOTIFY, payload: {} })
-                        }}
-                    />
-
                     <input
                         type="text"
                         className="form-control d-block my-3 w-100 p-2"
