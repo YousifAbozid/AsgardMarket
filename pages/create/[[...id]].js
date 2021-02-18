@@ -109,7 +109,7 @@ const ProductsManager = () => {
                         >
                             <input
                                 type="number"
-                                className="form-control d-block my-3 w-100 p-2"
+                                className="form-control d-block mb-1 w-100 p-2"
                                 placeholder="Price"
                                 value={price}
                                 onChange={({ target }) => {
@@ -131,7 +131,7 @@ const ProductsManager = () => {
                         >
                             <input
                                 type="number"
-                                className="form-control d-block my-3 w-100 p-2"
+                                className="form-control d-block w-100 p-2"
                                 placeholder="In Stock"
                                 value={inStock}
                                 onChange={({ target }) => {
@@ -236,7 +236,7 @@ const ProductsManager = () => {
                 </div>
             </form>
 
-            <button type="submit" className="btn btn-info my-2 px-4">
+            <button type="submit" className="btn btn-info mb-3 px-4">
                 Create
             </button>
         </div>
