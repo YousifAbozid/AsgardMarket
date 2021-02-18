@@ -203,7 +203,7 @@ const ProductsManager = () => {
                         </div>
                     </div>
 
-                    <div className="row img-up">
+                    <div className="row img-up mx-0">
                         {images.map((image, index) => (
                             <div key={index} className="file_up">
                                 <img
@@ -212,18 +212,23 @@ const ProductsManager = () => {
                                             ? image.url
                                             : URL.createObjectURL(image)
                                     }
-                                    style={{
-                                        maxWidth: "150px",
-                                        maxHeight: "150px",
-                                    }}
                                     className="img-thumbnail rounded"
                                     alt=""
                                 />
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                ></button>
                             </div>
                         ))}
                     </div>
                 </div>
             </form>
+
+            <button type="submit" className="btn btn-info my-2 px-4">
+                Create
+            </button>
         </div>
     )
 }
