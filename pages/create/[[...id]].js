@@ -2,6 +2,8 @@ import Head from "next/head"
 import { useContext, useState } from "react"
 import { ACTIONS } from "../../store/Actions"
 import { DataContext } from "../../store/GlobalState"
+import { postData } from "../../utils/fetchData"
+import { imageUpload } from "../../utils/imageUpload"
 
 const ProductsManager = () => {
     const { state, dispatch } = useContext(DataContext)
@@ -65,6 +67,63 @@ const ProductsManager = () => {
         // setImages(newArray)
     }
 
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        if (auth.user.role !== "admin") {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "Unauthorized, you are not an admin." },
+            })
+        }
+
+        if (
+            !title ||
+            !price ||
+            !inStock ||
+            !description ||
+            !content ||
+            !category ||
+            images.length === 0
+        ) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "Please add all fields." },
+            })
+        }
+        dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
+        let media = []
+        const imgNewUrl = images.filter((image) => !image.url)
+        const imgOldUrl = images.filter((image) => image.url)
+        if (imgNewUrl.length > 0) media = await imageUpload(imgNewUrl)
+
+        await postData(
+            "product",
+            {
+                title,
+                price,
+                inStock,
+                description,
+                content,
+                category,
+                images: [...imgOldUrl, ...media],
+            },
+            auth.token
+        ).then((response) => {
+            if (response.error) {
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { error: response.error },
+                })
+            }
+
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { success: response.message },
+            })
+        })
+    }
+
     if (!auth.user) return null
 
     return (
@@ -73,7 +132,7 @@ const ProductsManager = () => {
                 <title>Asgard Market - Products Manager</title>
             </Head>
 
-            <form className="row">
+            <form className="row" onSubmit={handleSubmit}>
                 <div className="col-md-6">
                     <input
                         type="text"
@@ -222,11 +281,11 @@ const ProductsManager = () => {
                         ))}
                     </div>
                 </div>
-            </form>
 
-            <button type="submit" className="btn btn-info mb-3 px-4">
-                Create
-            </button>
+                <button type="submit" className="btn btn-info my-3 px-4">
+                    Create
+                </button>
+            </form>
         </div>
     )
 }
