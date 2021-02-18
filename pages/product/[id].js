@@ -27,7 +27,13 @@ const DetailProduct = (props) => {
 
     if (product === null) {
         return (
-            <div>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: "20px",
+                }}
+            >
                 <Head>
                     <title>Asgard Market - No Product</title>
                 </Head>
