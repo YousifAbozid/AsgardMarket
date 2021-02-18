@@ -57,6 +57,15 @@ const ProductsManager = () => {
         setImages([...images, ...newImages])
     }
 
+    const handleDelete = (i) => {
+        setImages(images.filter((image, index) => index !== i)) // this work
+        // setImages(images.filter((image, index) => (index === i ? null : image))) // also this works
+        // third option won't bite either
+        // const newArray = [...images]
+        // newArray.splice(i, 1)
+        // setImages(newArray)
+    }
+
     if (!auth.user) return null
 
     return (
@@ -89,14 +98,14 @@ const ProductsManager = () => {
                         }}
                     />
 
-                    <div className="row" style={{ margin: "-25px" }}>
+                    <div className="row">
                         <div
                             className="col-sm-6"
-                            style={{
-                                marginRight: "0px",
-                                paddingLeft: "23px",
-                                paddingRight: "23px",
-                            }}
+                            // style={{
+                            //     marginRight: "0px",
+                            //     paddingLeft: "23px",
+                            //     paddingRight: "23px",
+                            // }}
                         >
                             <input
                                 type="number"
@@ -114,11 +123,11 @@ const ProductsManager = () => {
                         </div>
                         <div
                             className="col-sm-6"
-                            style={{
-                                marginLeft: "0px",
-                                paddingRight: "23px",
-                                paddingLeft: "23px",
-                            }}
+                            // style={{
+                            //     marginLeft: "0px",
+                            //     paddingRight: "23px",
+                            //     paddingLeft: "23px",
+                            // }}
                         >
                             <input
                                 type="number"
@@ -138,7 +147,7 @@ const ProductsManager = () => {
 
                     <textarea
                         className="form-control d-block my-3 w-100 p-2"
-                        rows="2"
+                        rows="3"
                         cols="30"
                         placeholder="Description"
                         value={description}
@@ -152,7 +161,7 @@ const ProductsManager = () => {
                     />
                     <textarea
                         className="form-control d-block my-3 w-100 p-2"
-                        rows="4"
+                        rows="5"
                         cols="30"
                         placeholder="Content"
                         value={content}
@@ -205,7 +214,7 @@ const ProductsManager = () => {
 
                     <div className="row img-up mx-0">
                         {images.map((image, index) => (
-                            <div key={index} className="file_up">
+                            <div key={index} className="file_img">
                                 <img
                                     src={
                                         image.url
@@ -219,6 +228,7 @@ const ProductsManager = () => {
                                     type="button"
                                     className="btn-close"
                                     aria-label="Close"
+                                    onClick={() => handleDelete(index)}
                                 ></button>
                             </div>
                         ))}
