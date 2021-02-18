@@ -128,7 +128,7 @@ const profile = () => {
                     <h3 className="text-center text-uppercase">
                         {auth.user.role === "user"
                             ? `${auth.user.name}'s Profile`
-                            : `${auth.user.name}'s Profile *ADMIN*`}
+                            : `${auth.user.name}'s Profile ✅`}
                     </h3>
                     <div className="avatar">
                         <img
