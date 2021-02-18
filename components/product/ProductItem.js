@@ -38,7 +38,12 @@ const ProductItem = ({ product }) => {
                 alt={product.images[0].url}
             />
             <div className="card-body">
-                <h5 className="card-title text-capitalize">{product.title}</h5>
+                <h5
+                    className="card-title text-capitalize"
+                    title={product.title}
+                >
+                    {product.title}
+                </h5>
                 <div
                     // className="row justify-content-between mx-0" // this doesn't work in bootstrap v5
                     // instead I used these styles below
@@ -48,13 +53,20 @@ const ProductItem = ({ product }) => {
                         justifyContent: "space-between",
                     }}
                 >
-                    <h6 className="text-danger">${product.price}</h6>
+                    <h6 className="text-danger" title={`$${product.price}`}>
+                        ${product.price}
+                    </h6>
                     {product.inStock > 0 ? (
-                        <h6 className="text-danger">
+                        <h6
+                            className="text-danger"
+                            title={`${product.inStock} Pcs`}
+                        >
                             In Stock: {product.inStock}
                         </h6>
                     ) : (
-                        <h6 className="text-muted">Out Stock</h6>
+                        <h6 className="text-muted" title="Out Stock">
+                            Out Stock
+                        </h6>
                     )}
                 </div>
                 <p className="card-text" title={product.description}>
