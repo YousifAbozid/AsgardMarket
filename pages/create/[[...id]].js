@@ -116,6 +116,13 @@ const ProductsManager = () => {
                     payload: { error: response.error },
                 })
             }
+            setTitle("")
+            setPrice(0)
+            setInStock(0)
+            setDescription("")
+            setContent("")
+            setCategory("")
+            setImages([])
 
             return dispatch({
                 type: ACTIONS.NOTIFY,
@@ -146,17 +153,13 @@ const ProductsManager = () => {
                     />
 
                     <div className="row">
-                        <div
-                            className="col-sm-6"
-                            // style={{
-                            //     marginRight: "0px",
-                            //     paddingLeft: "23px",
-                            //     paddingRight: "23px",
-                            // }}
-                        >
+                        <div className="col-sm-6">
+                            <label htmlFor="price" className="form-label">
+                                Price
+                            </label>
                             <input
                                 type="number"
-                                className="form-control d-block mb-1 w-100 p-2"
+                                className="form-control d-block w-100"
                                 placeholder="Price"
                                 value={price}
                                 onChange={({ target }) => {
@@ -168,17 +171,13 @@ const ProductsManager = () => {
                                 }}
                             />
                         </div>
-                        <div
-                            className="col-sm-6"
-                            // style={{
-                            //     marginLeft: "0px",
-                            //     paddingRight: "23px",
-                            //     paddingLeft: "23px",
-                            // }}
-                        >
+                        <div className="col-sm-6">
+                            <label htmlFor="inStock" className="form-label">
+                                In Stock
+                            </label>
                             <input
                                 type="number"
-                                className="form-control d-block w-100 p-2"
+                                className="form-control d-block w-100"
                                 placeholder="In Stock"
                                 value={inStock}
                                 onChange={({ target }) => {
@@ -233,7 +232,7 @@ const ProductsManager = () => {
                                 })
                             }}
                         >
-                            <option value="">All Products</option>
+                            <option value="">All Categories</option>
                             {categories.map((category) => (
                                 <option key={category._id} value={category._id}>
                                     {category.name}
@@ -245,9 +244,6 @@ const ProductsManager = () => {
 
                 <div className="col-md-6 my-3">
                     <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">Upload</span>
-                        </div>
                         <div>
                             <input
                                 className="form-control"
