@@ -14,6 +14,48 @@ const ProductsManager = () => {
     const [description, setDescription] = useState("")
     const [content, setContent] = useState("")
     const [category, setCategory] = useState("")
+    const [images, setImages] = useState([])
+
+    const handleUploadInput = async ({ target }) => {
+        dispatch({ type: ACTIONS.NOTIFY, payload: {} })
+
+        let newImages = []
+        let num = 0
+        let error = ""
+
+        const files = [...target.files]
+        if (!files) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "File does not exist." },
+            })
+        }
+
+        files.forEach((file) => {
+            if (file.type !== "image/jpeg" && file.type !== "image/png") {
+                return (error = "Image format is incorrect.")
+            }
+            // 1024 * 1024 * 2 = 2mb
+            if (file.size > 1024 * 1024 * 2) {
+                return (error = "Select an image not bigger than 2MB.")
+            }
+
+            num += 1
+            if (num <= 5) newImages.push(file)
+            return newImages
+        })
+
+        if (error) dispatch({ type: ACTIONS.NOTIFY, payload: { error } })
+
+        const imgCount = images.length
+        if (imgCount + newImages.length > 5) {
+            return dispatch({
+                type: ACTIONS.NOTIFY,
+                payload: { error: "You can select up to 5 images only." },
+            })
+        }
+        setImages([...images, ...newImages])
+    }
 
     if (!auth.user) return null
 
@@ -142,6 +184,43 @@ const ProductsManager = () => {
                                 </option>
                             ))}
                         </select>
+                    </div>
+                </div>
+
+                <div className="col-md-6 my-3">
+                    <div className="input-group mb-3">
+                        <div className="input-group-prepend">
+                            <span className="input-group-text">Upload</span>
+                        </div>
+                        <div>
+                            <input
+                                className="form-control"
+                                type="file"
+                                onChange={handleUploadInput}
+                                multiple
+                                accept="image/*"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="row img-up">
+                        {images.map((image, index) => (
+                            <div key={index} className="file_up">
+                                <img
+                                    src={
+                                        image.url
+                                            ? image.url
+                                            : URL.createObjectURL(image)
+                                    }
+                                    style={{
+                                        maxWidth: "150px",
+                                        maxHeight: "150px",
+                                    }}
+                                    className="img-thumbnail rounded"
+                                    alt=""
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </form>
