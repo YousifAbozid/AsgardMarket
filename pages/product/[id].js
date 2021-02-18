@@ -41,7 +41,7 @@ const DetailProduct = (props) => {
                     className="d-block img-thumbnail rounded mt-4 w-100"
                     style={{ height: "350px" }}
                 />
-                <div className="row mx-0" style={{ cursor: "pointer" }}>
+                <div className="row mx-0">
                     {product.images.map((image, index) => (
                         <img
                             key={index}
@@ -50,7 +50,11 @@ const DetailProduct = (props) => {
                             className={`img-thumbnail rounded ${isActive(
                                 index
                             )}`}
-                            style={{ height: "80px", width: "20%" }}
+                            style={{
+                                height: "80px",
+                                width: "20%",
+                                cursor: "pointer",
+                            }}
                             onClick={() => setTab(index)}
                         />
                     ))}
