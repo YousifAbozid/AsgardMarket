@@ -61,7 +61,7 @@ const createProduct = async (request, response) => {
         }
 
         const newProduct = new Product({
-            title,
+            title: title.toLowerCase(),
             price,
             inStock,
             description,
