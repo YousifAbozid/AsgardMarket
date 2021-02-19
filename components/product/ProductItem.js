@@ -5,7 +5,7 @@ import { addToCart } from "../../store/Actions"
 
 const ProductItem = ({ product }) => {
     const { state, dispatch } = useContext(DataContext)
-    const { cart } = state
+    const { cart, auth } = state
 
     const userLink = () => {
         return (
@@ -30,6 +30,32 @@ const ProductItem = ({ product }) => {
         )
     }
 
+    const adminLink = () => {
+        return (
+            <>
+                <Link href={`/product/${product._id}`}>
+                    <a
+                        className="btn btn-info"
+                        style={{ marginRight: "5px", flex: 1 }}
+                    >
+                        View
+                    </a>
+                </Link>
+                <Link href={`/create/${product._id}`}>
+                    <a className="btn btn-primary" style={{ flex: 1 }}>
+                        Edit
+                    </a>
+                </Link>
+                <button
+                    className="btn btn-danger"
+                    style={{ marginLeft: "5px", flex: 1 }}
+                >
+                    Delete
+                </button>
+            </>
+        )
+    }
+
     return (
         <div className="card" style={{ width: "18rem" }}>
             <img
@@ -45,8 +71,6 @@ const ProductItem = ({ product }) => {
                     {product.title}
                 </h5>
                 <div
-                    // className="row justify-content-between mx-0" // this doesn't work in bootstrap v5
-                    // instead I used these styles below
                     style={{
                         display: "flex",
                         flexDirection: "row",
@@ -73,14 +97,14 @@ const ProductItem = ({ product }) => {
                     {product.description}
                 </p>
                 <div
-                    // className="row justify-content-between mx-0" // this doesn't work in bootstrap v5
-                    // instead I used these styles below
                     style={{
                         display: "flex",
                         flexDirection: "row",
                     }}
                 >
-                    {userLink()}
+                    {!auth.user || auth.user.role !== "admin"
+                        ? userLink()
+                        : adminLink()}
                 </div>
             </div>
         </div>
