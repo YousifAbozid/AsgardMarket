@@ -3,13 +3,14 @@ import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { ACTIONS } from "../../store/Actions"
 import { DataContext } from "../../store/GlobalState"
-import { getData, postData } from "../../utils/fetchData"
+import { getData, postData, putData } from "../../utils/fetchData"
 import { imageUpload } from "../../utils/imageUpload"
 
 const ProductsManager = () => {
     const { state, dispatch } = useContext(DataContext)
     const { auth, categories } = state
     const router = useRouter()
+    const { id } = router.query
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState(0)
     const [inStock, setInStock] = useState(0)
@@ -99,41 +100,62 @@ const ProductsManager = () => {
         const imgOldUrl = images.filter((image) => image.url)
         if (imgNewUrl.length > 0) media = await imageUpload(imgNewUrl)
 
-        await postData(
-            "product",
-            {
-                title,
-                price,
-                inStock,
-                description,
-                content,
-                category,
-                images: [...imgOldUrl, ...media],
-            },
-            auth.token
-        ).then((response) => {
-            if (response.error) {
-                return dispatch({
+        if (onEdit) {
+            await putData(
+                `product/${id}`,
+                {
+                    title,
+                    price,
+                    inStock,
+                    description,
+                    content,
+                    category,
+                    images: [...imgOldUrl, ...media],
+                },
+                auth.token
+            ).then((response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+                dispatch({
                     type: ACTIONS.NOTIFY,
-                    payload: { error: response.error },
+                    payload: { success: response.message },
                 })
-            }
-            setTitle("")
-            setPrice(0)
-            setInStock(0)
-            setDescription("")
-            setContent("")
-            setCategory("")
-            setImages([])
-
-            return dispatch({
-                type: ACTIONS.NOTIFY,
-                payload: { success: response.message },
+                return router.push(`/product/${id}`)
             })
-        })
+        } else {
+            await postData(
+                "product",
+                {
+                    title,
+                    price,
+                    inStock,
+                    description,
+                    content,
+                    category,
+                    images: [...imgOldUrl, ...media],
+                },
+                auth.token
+            ).then((response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+                dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+
+                return router.push("/")
+            })
+        }
     }
 
-    const { id } = router.query
     useEffect(() => {
         if (id) {
             setOnEdit(true)
@@ -307,7 +329,7 @@ const ProductsManager = () => {
                 </div>
 
                 <button type="submit" className="btn btn-info my-3 px-4">
-                    Create
+                    {onEdit ? "Update" : "Create"}
                 </button>
             </form>
         </div>
