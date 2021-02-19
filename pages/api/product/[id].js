@@ -12,6 +12,9 @@ export default async (request, response) => {
         case "PUT":
             await updateProduct(request, response)
             break
+        case "DELETE":
+            await deleteProduct(request, response)
+            break
     }
 }
 
@@ -69,7 +72,26 @@ const updateProduct = async (request, response) => {
             { title, price, inStock, description, content, category, images }
         )
 
-        response.json({ message: "Updated product successfully." })
+        return response.json({ message: "Updated product successfully." })
+    } catch (error) {
+        return response.status(500).json({ error: error.message })
+    }
+}
+
+const deleteProduct = async (request, response) => {
+    try {
+        const result = await auth(request, response)
+        if (result.role !== "admin") {
+            return response
+                .status(401)
+                .json({ error: "Unauthorized, you are not an admin." })
+        }
+
+        const { id } = request.query
+
+        await Product.findOneAndDelete(id)
+
+        return response.json({ message: "Deleted product successfully." })
     } catch (error) {
         return response.status(500).json({ error: error.message })
     }
