@@ -1,14 +1,15 @@
 import Head from "next/head"
-import { useContext, useState } from "react"
+import { useRouter } from "next/router"
+import { useContext, useEffect, useState } from "react"
 import { ACTIONS } from "../../store/Actions"
 import { DataContext } from "../../store/GlobalState"
-import { postData } from "../../utils/fetchData"
+import { getData, postData } from "../../utils/fetchData"
 import { imageUpload } from "../../utils/imageUpload"
 
 const ProductsManager = () => {
     const { state, dispatch } = useContext(DataContext)
     const { auth, categories } = state
-
+    const router = useRouter()
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState(0)
     const [inStock, setInStock] = useState(0)
@@ -16,6 +17,7 @@ const ProductsManager = () => {
     const [content, setContent] = useState("")
     const [category, setCategory] = useState("")
     const [images, setImages] = useState([])
+    const [onEdit, setOnEdit] = useState(false)
 
     const handleUploadInput = async ({ target }) => {
         dispatch({ type: ACTIONS.NOTIFY, payload: {} })
@@ -130,6 +132,32 @@ const ProductsManager = () => {
             })
         })
     }
+
+    const { id } = router.query
+    useEffect(() => {
+        if (id) {
+            setOnEdit(true)
+            getData(`product/${id}`, auth.token).then((response) => {
+                let product = response.product
+                setTitle(product.title)
+                setPrice(product.price)
+                setInStock(product.inStock)
+                setDescription(product.description)
+                setContent(product.content)
+                setCategory(product.category)
+                setImages(product.images)
+            })
+        } else {
+            setOnEdit(false)
+            setTitle("")
+            setPrice(0)
+            setInStock(0)
+            setDescription("")
+            setContent("")
+            setCategory("")
+            setImages([])
+        }
+    }, [id])
 
     if (!auth.user) return null
 
