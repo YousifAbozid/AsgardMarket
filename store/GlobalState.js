@@ -34,20 +34,6 @@ export const DataProvider = ({ children }) => {
                     },
                 })
             })
-
-            getData("categories").then((response) => {
-                if (response.error) {
-                    return dispatch({
-                        type: ACTIONS.NOTIFY,
-                        payload: { error: response.error },
-                    })
-                }
-
-                dispatch({
-                    type: ACTIONS.ADD_CATEGORIES,
-                    payload: response.categories,
-                })
-            })
         }
     }, [])
 
@@ -59,6 +45,22 @@ export const DataProvider = ({ children }) => {
     useEffect(() => {
         localStorage.setItem("cartItems", JSON.stringify(cart))
     }, [cart])
+
+    useEffect(() => {
+        getData("categories").then((response) => {
+            if (response.error) {
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { error: response.error },
+                })
+            }
+
+            dispatch({
+                type: ACTIONS.ADD_CATEGORIES,
+                payload: response.categories,
+            })
+        })
+    }, [])
 
     useEffect(() => {
         if (auth.token) {
