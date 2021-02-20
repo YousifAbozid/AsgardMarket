@@ -7,31 +7,34 @@ const Modal = () => {
     const { state, dispatch } = useContext(DataContext)
     const { modal, auth } = state
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
+        if (modal.type === ACTIONS.ADD_CART) {
+            dispatch(deleteItem(modal.data, modal.id, modal.type))
+        }
+
         if (modal.type === ACTIONS.ADD_USERS) {
             dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
 
-            await deleteData(`user/${modal.id}`, auth.token).then(
-                (response) => {
-                    if (response.error) {
-                        return dispatch({
-                            type: ACTIONS.NOTIFY,
-                            payload: { error: response.error },
-                        })
-                    }
-
+            deleteData(`user/${modal.id}`, auth.token).then((response) => {
+                if (response.error) {
                     return dispatch({
                         type: ACTIONS.NOTIFY,
-                        payload: { success: response.message },
+                        payload: { error: response.error },
                     })
                 }
-            )
+                dispatch(deleteItem(modal.data, modal.id, modal.type))
+
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+            })
         }
 
         if (modal.type === ACTIONS.ADD_CATEGORIES) {
             dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
 
-            await deleteData(`categories/${modal.id}`, auth.token).then(
+            deleteData(`categories/${modal.id}`, auth.token).then(
                 (response) => {
                     if (response.error) {
                         return dispatch({
@@ -39,6 +42,7 @@ const Modal = () => {
                             payload: { error: response.error },
                         })
                     }
+                    dispatch(deleteItem(modal.data, modal.id, modal.type))
 
                     return dispatch({
                         type: ACTIONS.NOTIFY,
@@ -48,7 +52,23 @@ const Modal = () => {
             )
         }
 
-        dispatch(deleteItem(modal.data, modal.id, modal.type))
+        if (modal.type === ACTIONS.DELETE_PRODUCT) {
+            dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+            deleteData(`product/${modal.id}`, auth.token).then((response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+
+                return dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+            })
+        }
+
         dispatch({ type: ACTIONS.ADD_MODAL, payload: {} })
     }
 

@@ -89,7 +89,7 @@ const deleteProduct = async (request, response) => {
 
         const { id } = request.query
 
-        await Product.findOneAndDelete(id)
+        await Product.findByIdAndDelete(id)
 
         return response.json({ message: "Deleted product successfully." })
     } catch (error) {

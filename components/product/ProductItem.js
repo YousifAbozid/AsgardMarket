@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { useContext } from "react"
 import { DataContext } from "../../store/GlobalState"
-import { addToCart } from "../../store/Actions"
+import { ACTIONS, addToCart } from "../../store/Actions"
 
 const ProductItem = ({ product }) => {
     const { state, dispatch } = useContext(DataContext)
@@ -49,6 +49,20 @@ const ProductItem = ({ product }) => {
                 <button
                     className="btn btn-danger"
                     style={{ marginLeft: "5px", flex: 1 }}
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    onClick={() =>
+                        dispatch({
+                            type: ACTIONS.ADD_MODAL,
+                            payload: {
+                                data: "",
+                                title: product.title,
+                                id: product._id,
+                                type: ACTIONS.DELETE_PRODUCT,
+                                toDelete: "Product",
+                            },
+                        })
+                    }
                 >
                     Delete
                 </button>
