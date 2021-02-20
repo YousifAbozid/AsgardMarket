@@ -1,11 +1,15 @@
-## To Get Started
+## For Creating Your Own Version
 
-First, run the development server:
+First, clone this repository:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+`https://github.com/YousifAbozid/AsgardMarket.git`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Second, install all the dependencies:
+
+`yarn install`
+
+Then, run the development server:
+
+`yarn dev`
+
+After that you can see the application in your browser from [here](http://localhost:3000) and make all the changes you want.
