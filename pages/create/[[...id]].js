@@ -146,12 +146,17 @@ const ProductsManager = () => {
                         payload: { error: response.error },
                     })
                 }
+
                 dispatch({
                     type: ACTIONS.NOTIFY,
                     payload: { success: response.message },
                 })
 
-                return router.push("/")
+                // this timer will redirect to the home page after 2 seconds to give a chance to
+                // the admin to see the success message
+                setTimeout(() => {
+                    router.push("/")
+                }, 1000 * 2)
             })
         }
     }
