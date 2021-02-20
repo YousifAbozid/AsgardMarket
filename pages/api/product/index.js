@@ -12,6 +12,28 @@ export default async (request, response) => {
         case "POST":
             await createProduct(request, response)
             break
+        case "DELETE":
+            await deleteProducts(request, response)
+            break
+    }
+}
+
+const deleteProducts = async (request, response) => {
+    try {
+        const result = await auth(request, response)
+        if (!result.root) {
+            return response
+                .status(401)
+                .json({ error: "Unauthorized, you are not the manager." })
+        }
+
+        await Product.deleteMany()
+
+        return response.json({
+            message: "Activated Protocol Zero Successfully.",
+        })
+    } catch (error) {
+        return response.status(500).json({ error: error.message })
     }
 }
 
