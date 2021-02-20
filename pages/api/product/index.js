@@ -30,9 +30,9 @@ class APIfeatures {
         const excludeFields = ["page", "sort", "limit"]
         excludeFields.forEach((el) => delete queryObj[el])
 
-        if (queryObj.category == "all")
+        if (queryObj.category !== "all")
             this.query.find({ category: queryObj.category })
-        if (queryObj.title == "all")
+        if (queryObj.title !== "all")
             this.query.find({ title: { $regex: queryObj.title } })
 
         this.query.find()
@@ -41,11 +41,13 @@ class APIfeatures {
 
     sorting() {
         if (this.queryString.sort) {
-            const sortBy = this.queryString.sort.split(",").join(" ")
+            const sortBy = this.queryString.sort.split(",").join("")
             this.query = this.query.sort(sortBy)
         } else {
             this.query = this.query.sort("-createdAt")
         }
+
+        return this
     }
 
     paginating() {
@@ -63,6 +65,7 @@ const getProducts = async (request, response) => {
             .filtering()
             .sorting()
             .paginating()
+
         const products = await features.query
         response.json({
             status: "Success",
