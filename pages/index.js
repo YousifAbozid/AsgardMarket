@@ -16,7 +16,7 @@ const Home = (props) => {
                 <title>Asgard Market - Store for what you desire!</title>
             </Head>
 
-            {auth.user && auth.user.root && (
+            {auth.user && auth.user.root && products.length !== 0 && (
                 <div
                     style={{
                         marginTop: "12px",

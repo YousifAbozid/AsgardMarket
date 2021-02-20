@@ -54,6 +54,7 @@ const Modal = () => {
 
         if (modal.type === ACTIONS.DELETE_PRODUCT) {
             dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
             deleteData(`product/${modal.id}`, auth.token).then((response) => {
                 if (response.error) {
                     return dispatch({
@@ -69,6 +70,30 @@ const Modal = () => {
 
                 // this timer will reload the page after 2 seconds to give a chance to
                 // the admin to see the success message
+                setTimeout(() => {
+                    location.reload()
+                }, 1000 * 2)
+            })
+        }
+
+        if (modal.type === ACTIONS.DELETE_ALL_PRODUCTS) {
+            dispatch({ type: ACTIONS.NOTIFY, payload: { loading: true } })
+
+            deleteData("product", auth.token).then((response) => {
+                if (response.error) {
+                    return dispatch({
+                        type: ACTIONS.NOTIFY,
+                        payload: { error: response.error },
+                    })
+                }
+
+                dispatch({
+                    type: ACTIONS.NOTIFY,
+                    payload: { success: response.message },
+                })
+
+                // this timer will reload the page after 2 seconds to give a chance to
+                // the root to see the success message
                 setTimeout(() => {
                     location.reload()
                 }, 1000 * 2)
@@ -111,7 +136,11 @@ const Modal = () => {
                         ></button>
                     </div>
                     <div className="modal-body">
-                        Are you sure you want to delete this {modal.toDelete}?
+                        Are you sure you want to delete{" "}
+                        {modal.type === ACTIONS.DELETE_ALL_PRODUCTS
+                            ? ""
+                            : "this "}
+                        {modal.toDelete}?
                     </div>
                     <div className="modal-footer">
                         <button
