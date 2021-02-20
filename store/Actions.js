@@ -7,6 +7,7 @@ export const ACTIONS = {
     ADD_USERS: "ADD_USERS",
     ADD_CATEGORIES: "ADD_CATEGORIES",
     DELETE_PRODUCT: "DELETE_PRODUCT",
+    DELETE_ALL_PRODUCTS: "DELETE_ALL_PRODUCTS",
 }
 
 export const addToCart = (product, cart) => {
