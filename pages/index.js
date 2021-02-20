@@ -1,7 +1,7 @@
-import { getData } from "../utils/fetchData"
-import { useState } from "react"
 import Head from "next/head"
+import { useState } from "react"
 import ProductItem from "../components/product/ProductItem"
+import { getData } from "../utils/fetchData"
 
 const Home = (props) => {
     const [products] = useState(props.products)

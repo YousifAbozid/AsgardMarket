@@ -62,10 +62,16 @@ const Modal = () => {
                     })
                 }
 
-                return dispatch({
+                dispatch({
                     type: ACTIONS.NOTIFY,
                     payload: { success: response.message },
                 })
+
+                // this timer will reload the page after 2 seconds to give a chance to
+                // the admin to see the success message
+                setTimeout(() => {
+                    location.reload()
+                }, 1000 * 2)
             })
         }
 
