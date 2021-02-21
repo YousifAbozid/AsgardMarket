@@ -1,6 +1,7 @@
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
+import Filter from "../components/Filter"
 import ProductItem from "../components/product/ProductItem"
 import { ACTIONS } from "../store/Actions"
 import { DataContext } from "../store/GlobalState"
@@ -43,6 +44,8 @@ const Home = (props) => {
             <Head>
                 <title>Asgard Market - Store for what you desire!</title>
             </Head>
+
+            <Filter />
 
             {auth.user && auth.user.root && products.length !== 0 && (
                 <div
