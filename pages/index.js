@@ -28,7 +28,10 @@ const Home = (props) => {
     }, [router.query])
 
     const handleLoadMore = () => {
-        // TODO if there is no page=1 in router path add it first so load more work with categories
+        if (!router.query.page) {
+            router.query = { ...router.query, page: "2" }
+        }
+
         setPage(page + 1)
         filterSearch({ router, page: page + 1 })
         // this timer to scroll page down to see more products because it goes up when it fetches new data,

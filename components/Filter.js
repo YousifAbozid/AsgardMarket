@@ -15,7 +15,12 @@ const Filter = () => {
 
     const handleCategory = ({ target }) => {
         if (target.value === "all") {
-            router.push("/")
+            setCategory("")
+            delete router.query.category
+            router.push({
+                pathname: router.pathname,
+                query: router.query,
+            })
         } else {
             setCategory(target.value)
             filterSearch({ router, category: target.value })
