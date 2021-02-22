@@ -1,5 +1,6 @@
 import connectDB from "../../../utils/connectDB"
 import Category from "../../../models/category"
+import Product from "../../../models/product"
 import auth from "../../../middleware/auth"
 
 connectDB()
@@ -54,6 +55,14 @@ const deleteCategory = async (request, response) => {
         }
 
         const { id } = request.query
+        const products = await Product.find({ category: id })
+
+        if (products.length !== 0) {
+            return response.status(400).json({
+                error:
+                    "Sorry, we can't do that, you should delete the products that related to this category first.",
+            })
+        }
 
         await Category.findByIdAndDelete(id)
 
