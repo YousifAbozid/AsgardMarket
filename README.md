@@ -1,4 +1,4 @@
-## For Creating Your Own Version
+### For Creating Your Own Version
 
 First, clone this repository:
 
@@ -12,4 +12,4 @@ Then, run the development server:
 
 `yarn dev`
 
-After that you can see the application in your browser from [here](http://localhost:3000) and make all the changes you want.
+After that you can see the application in your browser from [here](http://localhost:3000) and make all the changes you want
