@@ -39,7 +39,7 @@ const Home = (props) => {
         // maybe I need to change this behavior soon for better performance, but for now it works just fine.
         setTimeout(() => {
             window.scrollBy(0, 10000)
-        }, 300) // I guess 300 ms is enough to get the products as this is server side rendering
+        }, 1000) // I guess 300 ms is enough to get the products as this is server side rendering
         // if not enough and scrolling seems not right you can increase the time like to 400 or 500 or whatever.
     }
 
