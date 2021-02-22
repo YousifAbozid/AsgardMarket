@@ -27,6 +27,20 @@ const Filter = () => {
         }
     }
 
+    const handleSort = ({ target }) => {
+        if (target.value === "-createdAt") {
+            setSort("")
+            delete router.query.sort
+            router.push({
+                pathname: router.pathname,
+                query: router.query,
+            })
+        } else {
+            setSort(target.value)
+            filterSearch({ router, sort: target.value })
+        }
+    }
+
     const handleSubmit = () => {}
 
     return (
@@ -73,7 +87,11 @@ const Filter = () => {
             </form>
 
             <div className="input-group-prepend col-md-2 px-0 mt-2">
-                <select className="form-select text-capitalize" value={sort}>
+                <select
+                    className="form-select text-capitalize"
+                    value={sort}
+                    onChange={handleSort}
+                >
                     <option value="-createdAt">Newest</option>
                     <option value="oldest">Oldest</option>
                     <option value="-sold">Best Seller</option>
