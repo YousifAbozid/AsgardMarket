@@ -20,7 +20,7 @@ const updateCategory = async (request, response) => {
     try {
         const result = await auth(request, response)
         if (result.role !== "admin") {
-            response
+            return response
                 .status(401)
                 .json({ error: "Unauthorized, you are not an admin." })
         }
@@ -33,7 +33,7 @@ const updateCategory = async (request, response) => {
             { name }
         )
 
-        response.json({
+        return response.json({
             message: "Updated category successfully.",
             category: {
                 ...updatedCategory._doc,
@@ -41,7 +41,7 @@ const updateCategory = async (request, response) => {
             },
         })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
 
@@ -49,7 +49,7 @@ const deleteCategory = async (request, response) => {
     try {
         const result = await auth(request, response)
         if (result.role !== "admin") {
-            response
+            return response
                 .status(401)
                 .json({ error: "Unauthorized, you are not an admin." })
         }
@@ -66,8 +66,8 @@ const deleteCategory = async (request, response) => {
 
         await Category.findByIdAndDelete(id)
 
-        response.json({ message: "Deleted category successfully." })
+        return response.json({ message: "Deleted category successfully." })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

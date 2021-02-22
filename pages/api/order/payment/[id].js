@@ -28,8 +28,8 @@ const paymentOrder = async (request, response) => {
             }
         )
 
-        response.json({ message: "Payment Successfull." })
+        return response.json({ message: "Payment Successfull." })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

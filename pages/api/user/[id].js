@@ -29,9 +29,9 @@ const updateRole = async (request, response) => {
 
         await User.findByIdAndUpdate({ _id: id }, { role })
 
-        response.json({ message: "Updated Successfully." })
+        return response.json({ message: "Updated Successfully." })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
 
@@ -48,8 +48,8 @@ const deleteUser = async (request, response) => {
 
         await User.findByIdAndDelete(id)
 
-        response.json({ message: "Deleted Successfully." })
+        return response.json({ message: "Deleted Successfully." })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

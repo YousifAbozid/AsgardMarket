@@ -16,7 +16,7 @@ const deliveredOrder = async (request, response) => {
     try {
         const result = await auth(request, response)
         if (result.role !== "admin") {
-            response
+            return response
                 .status(401)
                 .json({ error: "Unauthorized, you are not an admin." })
         }
@@ -25,7 +25,7 @@ const deliveredOrder = async (request, response) => {
         const order = await Order.findOne({ _id: id })
         if (order.paid) {
             await Order.findByIdAndUpdate({ _id: id }, { delivered: true })
-            response.json({
+            return response.json({
                 message: "Delivered Successfully.",
                 result: {
                     delivered: true,
@@ -44,7 +44,7 @@ const deliveredOrder = async (request, response) => {
                     method: "Cash",
                 }
             )
-            response.json({
+            return response.json({
                 message: "Paid in cash and delivered successfully.",
                 result: {
                     delivered: true,
@@ -55,6 +55,6 @@ const deliveredOrder = async (request, response) => {
             })
         }
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

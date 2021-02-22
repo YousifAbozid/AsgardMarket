@@ -35,7 +35,7 @@ const login = async (request, response) => {
         const accessToken = createAccessToken({ id: user._id })
         const refreshToken = createRefreshToken({ id: user._id })
 
-        response.json({
+        return response.json({
             message: "Logged In Successfully.",
             accessToken,
             refreshToken,
@@ -48,6 +48,6 @@ const login = async (request, response) => {
             },
         })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

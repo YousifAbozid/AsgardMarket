@@ -69,7 +69,15 @@ const updateProduct = async (request, response) => {
 
         await Product.findByIdAndUpdate(
             { _id: id },
-            { title, price, inStock, description, content, category, images }
+            {
+                title: title.toLowerCase(),
+                price,
+                inStock,
+                description,
+                content,
+                category,
+                images,
+            }
         )
 
         return response.json({ message: "Updated product successfully." })

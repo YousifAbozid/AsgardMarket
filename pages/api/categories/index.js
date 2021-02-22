@@ -33,12 +33,12 @@ const createCategory = async (request, response) => {
 
         await newCategory.save()
 
-        response.json({
+        return response.status(201).json({
             message: "Created category successfully.",
             newCategory,
         })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
 
@@ -46,8 +46,8 @@ const getCategories = async (request, response) => {
     try {
         const categories = await Category.find()
 
-        response.json({ categories })
+        return response.json({ categories })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

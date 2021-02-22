@@ -29,7 +29,7 @@ const getOrders = async (request, response) => {
             orders = await Order.find().populate("user", "-password")
         }
 
-        response.json({ orders })
+        return response.json({ orders })
     } catch (error) {
         return response.status(500).json({ error: error.message })
     }
@@ -53,7 +53,7 @@ const createOrder = async (request, response) => {
         })
 
         await newOrder.save()
-        response.status(201).json({
+        return response.status(201).json({
             message:
                 "Order Successfull, We will contact you to confirm the order soon.",
             newOrder,

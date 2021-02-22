@@ -24,8 +24,8 @@ const resetPassword = async (request, response) => {
             { password: passwordHash }
         )
 
-        response.json({ message: "Updated Password Successfully." })
+        return response.json({ message: "Updated Password Successfully." })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }

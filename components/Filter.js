@@ -74,8 +74,10 @@ const Filter = () => {
                         className="form-control"
                         type="text"
                         list="title_product"
-                        value={search.toLowerCase()}
-                        onChange={({ target }) => setSearch(target.value)}
+                        value={search}
+                        onChange={({ target }) =>
+                            setSearch(target.value.toLowerCase())
+                        }
                     />
 
                     <button

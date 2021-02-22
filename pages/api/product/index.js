@@ -67,13 +67,13 @@ const getProducts = async (request, response) => {
             .paginating()
 
         const products = await features.query
-        response.json({
+        return response.json({
             status: "Success",
             result: products.length,
             products,
         })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
 
@@ -121,7 +121,9 @@ const createProduct = async (request, response) => {
 
         await newProduct.save()
 
-        response.status(201).json({ message: "Created product successfully." })
+        return response
+            .status(201)
+            .json({ message: "Created product successfully." })
     } catch (error) {
         return response.status(500).json({ error: error.message })
     }

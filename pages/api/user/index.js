@@ -25,9 +25,9 @@ const getUsers = async (request, response) => {
         }
 
         const users = await User.find().select("-password")
-        response.json({ users })
+        return response.json({ users })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
 
@@ -41,7 +41,7 @@ const uploadInfo = async (request, response) => {
             { name, avatar }
         )
 
-        response.json({
+        return response.json({
             message: "Updated Profile Successfully.",
             user: {
                 name,
@@ -51,6 +51,6 @@ const uploadInfo = async (request, response) => {
             },
         })
     } catch (error) {
-        response.status(500).json({ error: error.message })
+        return response.status(500).json({ error: error.message })
     }
 }
