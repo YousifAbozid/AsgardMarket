@@ -13,6 +13,15 @@ const Filter = () => {
     const { state, dispatch } = useContext(DataContext)
     const { categories } = state
 
+    const handleCategory = ({ target }) => {
+        if (target.value === "all") {
+            router.push("/")
+        } else {
+            setCategory(target.value)
+            filterSearch({ router, category: target.value })
+        }
+    }
+
     const handleSubmit = () => {}
 
     return (
@@ -21,7 +30,9 @@ const Filter = () => {
                 <select
                     className="form-select text-capitalize"
                     value={category}
+                    onChange={handleCategory}
                 >
+                    <option value="all">All Products</option>
                     {categories.map((item) => (
                         <option key={item._id} value={item._id}>
                             {item.name}
