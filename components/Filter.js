@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react"
 import filterSearch from "../utils/filterSearch"
-import { getData } from "../utils/fetchData"
 import { useRouter } from "next/router"
 import { DataContext } from "../store/GlobalState"
 
@@ -42,7 +41,7 @@ const Filter = () => {
 
     useEffect(() => {
         if (search) {
-            filterSearch({ router, search })
+            filterSearch({ router, search: encodeURIComponent(search) })
         } else {
             delete router.query.search
             router.push({
