@@ -5,7 +5,6 @@ import { useRouter } from "next/router"
 import { DataContext } from "../store/GlobalState"
 
 const Filter = () => {
-    const [title, setTitle] = useState("")
     const [search, setSearch] = useState("")
     const [sort, setSort] = useState("")
     const [category, setCategory] = useState("")
@@ -41,7 +40,17 @@ const Filter = () => {
         }
     }
 
-    const handleSubmit = () => {}
+    useEffect(() => {
+        if (search) {
+            filterSearch({ router, search })
+        } else {
+            delete router.query.search
+            router.push({
+                pathname: router.pathname,
+                query: router.query,
+            })
+        }
+    }, [search])
 
     return (
         <div className="input-group flex-nowrap">
@@ -60,17 +69,14 @@ const Filter = () => {
                 </select>
             </div>
 
-            <form
-                className="col-md-8 mt-2 px-0"
-                autoComplete="off"
-                onSubmit={handleSubmit}
-            >
+            <form className="col-md-8 mt-2 px-0" autoComplete="off">
                 <div className="input-group">
                     <input
                         className="form-control"
                         type="text"
                         list="title_product"
                         value={search.toLowerCase()}
+                        onChange={({ target }) => setSearch(target.value)}
                     />
 
                     <button
